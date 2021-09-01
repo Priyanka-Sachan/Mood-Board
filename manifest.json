@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Bulletin",
+    "description": "A bulletin for you to link text, images and videos across the internet.",
+    "version": "0.0.1",
+    "icons": {
+        "16": "logo/logo.png",
+        "48": "logo/logo.png",
+        "128": "logo/logo.png"
+    },
+    "options_page": "settings/settings.html",
+    "action": {
+        "default_title": "Bulletin",
+        "default_popup": "popup/popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "storage",
+        "unlimitedStorage"
+    ],
+    "host_permissions": [
+        "*://*/*"
+    ],
+    "background": {
+        "service_worker": "service-worker.js"
+    }
+}
