@@ -1,0 +1,38 @@
+body {
+    background-color: #4a4a52;
+}
+
+.close-icon {
+    position: relative;
+    top: 6px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.pin {
+    background-color: #F5EEDC;
+    max-width: 256px;
+    margin: 8px;
+}
+
+.card-title {
+    display: inline;
+    margin: 8px;
+}
+
+.card-body {
+    padding: 8px;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+ ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+ ::-webkit-scrollbar-thumb {
+    background: #F06060;
+}
