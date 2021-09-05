@@ -1,5 +1,3 @@
-console.log("This prints to the console of the service worker (background script)");
-
 let recent_tab_id = null,
     new_pin_data = {};
 

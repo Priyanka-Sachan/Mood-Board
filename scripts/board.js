@@ -1,4 +1,3 @@
-console.log('Here is the board script!!!');
 const board = document.getElementById('board');
 
 function createPin(pin) {
@@ -25,10 +24,10 @@ function createPin(pin) {
     const cardText = document.createElement('p');
     cardText.classList.add('card-text');
     cardText.innerText = note;
-    const closeIcon = document.createElement('i');
+    // Link to license for close.svg: https://fontawesome.com/license
+    const closeIcon = document.createElement('img');
+    closeIcon.setAttribute('src', './icons/close.svg');
     closeIcon.classList.add('close-icon');
-    closeIcon.classList.add('fa');
-    closeIcon.classList.add('fa-times');
     // closeIcon.setAttribute('onClick', `deleteBookmark('${wUrl}')`);
     cardBody.append(cardLink, cardSubtitle, cardText);
     card.append(closeIcon, cardBody);

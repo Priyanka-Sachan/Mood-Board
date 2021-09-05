@@ -1,18 +1,18 @@
 {
     "manifest_version": 3,
-    "name": "Bulletin",
-    "description": "A bulletin for you to link text, images and videos across the internet.",
+    "name": "Mood Board",
+    "description": "A second brain for you to link text, images and videos across the internet.",
     "version": "0.0.1",
     "icons": {
-        "16": "logo/logo.png",
-        "48": "logo/logo.png",
-        "128": "logo/logo.png"
+        "16": "icons/logo.png",
+        "48": "icons/logo.png",
+        "128": "icons/logo.png"
     },
     "options_page": "settings.html",
     "action": {
-        "default_title": "Bulletin",
+        "default_title": "Mood Board",
         "default_popup": "popup.html",
-        "default_icon": "logo/logo.png"
+        "default_icon": "icons/logo.png"
     },
     "commands": {
         "_execute_action": {
@@ -20,7 +20,7 @@
                 "default": "Ctrl+Shift+B",
                 "mac": "MacCtrl+Shift+B"
             },
-            "description": "Opens bulletin board"
+            "description": "Opens mood board"
         }
     },
     "permissions": [
