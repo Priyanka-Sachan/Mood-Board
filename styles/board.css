@@ -21,7 +21,7 @@ a:active {
 
 .pin {
     background-color: #F5EEDC;
-    max-width: 256px;
+    /* max-width: 256px; */
     margin: 8px;
 }
 

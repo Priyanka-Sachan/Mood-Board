@@ -1,37 +1,23 @@
 const board = document.getElementById('board');
+var msnry = new Masonry('#board', { "percentPosition": true });
 
 function createPin(pin) {
     const { wName, wUrl, note } = pin;
     const card = document.createElement('div');
-    card.classList.add('card');
-    card.classList.add('pin');
-    const cardBody = document.createElement('div');
-    cardBody.classList.add('card-body');
-    const cardLink = document.createElement('a');
-    cardLink.setAttribute('href', wUrl);
-    cardLink.setAttribute('target', '_blank');
-    const icon = document.createElement('img');
-    icon.setAttribute('src', `http://s2.googleusercontent.com/s2/favicons?domain_url=${wUrl}`);
-    const cardTitle = document.createElement('h5');
-    cardTitle.classList.add('card-title');
-    cardTitle.innerText = wName;
-    cardLink.append(icon, cardTitle);
-    const cardSubtitle = document.createElement('h6');
-    cardSubtitle.classList.add('card-subtitle');
-    cardSubtitle.classList.add('mb-2');
-    cardSubtitle.classList.add('text-muted');
-    cardSubtitle.innerText = wUrl;
-    const cardText = document.createElement('p');
-    cardText.classList.add('card-text');
-    cardText.innerText = note;
+    card.classList.add('card', 'pin', 'col-4', 'col-sm-3', 'col-md-3', 'col-lg-2');
+
     // Link to license for close.svg: https://fontawesome.com/license
-    const closeIcon = document.createElement('img');
-    closeIcon.setAttribute('src', './icons/close.svg');
-    closeIcon.classList.add('close-icon');
-    // closeIcon.setAttribute('onClick', `deleteBookmark('${wUrl}')`);
-    cardBody.append(cardLink, cardSubtitle, cardText);
-    card.append(closeIcon, cardBody);
-    board.append(card);
+    card.innerHTML = `<img src="./icons/close.svg" class="close-icon">
+    <div class="card-body">
+    <a href="${wUrl}" target="_blank">
+    <img src="http://s2.googleusercontent.com/s2/favicons?domain_url=${wUrl}">
+    <h5 class="card-title">${wName}</h5>
+    </a><h6 class="card-subtitle mb-2 text-muted">${wUrl}</h6>
+    <p class="card-text">${note}</p></div>`;
+
+    board.appendChild(card);
+    msnry.appended(card);
+    msnry.layout();
 }
 
 chrome.runtime.sendMessage({
