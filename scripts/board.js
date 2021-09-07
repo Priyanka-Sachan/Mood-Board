@@ -29,3 +29,17 @@ chrome.runtime.sendMessage({
         });
     }
 });
+
+const openNav = document.getElementById('open-nav');
+
+openNav.addEventListener('click', () => {
+    document.getElementById("mood-nav").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+});
+
+const closeNav = document.getElementById('close-nav');
+
+closeNav.addEventListener('click', () => {
+    document.getElementById("mood-nav").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+});
