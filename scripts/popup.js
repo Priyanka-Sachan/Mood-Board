@@ -7,6 +7,7 @@ chrome.windows.getCurrent({ populate: true }, window => {
     const site_to_pin = window.tabs.filter(tab => tab.active);
     wName.value = site_to_pin[0].title;
     wUrl.value = site_to_pin[0].url;
+
 });
 
 form.addEventListener('submit', function(event) {
