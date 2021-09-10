@@ -1,15 +1,17 @@
 const form = document.getElementById('add-pin-form');
-const wName = document.getElementById('w_name');
+const wImage = document.getElementById('w_image');
+const wTitle = document.getElementById('w_title');
+const wType = document.getElementById('w_type');
 const wUrl = document.getElementById('w_url');
-const note = document.getElementById('note');
-let favicon, desc, domain, imageUrl, type, today;
+const wDesc = document.getElementById('w_desc');
+const wNote = document.getElementById('w_note');
+let image, title, type, favicon, url, desc, note, domain, date;
 let message;
 
 chrome.windows.getCurrent({ populate: true }, window => {
     const site_to_pin = window.tabs.filter(tab => tab.active);
 
     const tabId = site_to_pin[0].id;
-    console.log('TabiD', tabId);
     chrome.scripting.executeScript({
             target: { 'tabId': tabId },
             files: ['tabDetails.js'],
@@ -22,24 +24,28 @@ chrome.windows.getCurrent({ populate: true }, window => {
             }
         });
 
-    wName.value = site_to_pin[0].title;
-    wUrl.value = site_to_pin[0].url;
-    favicon = site_to_pin[0].favIconUrl;
-    // console.log(site_to_pin);
+    title = site_to_pin[0].title;
+    console.log('Title', title);
+    wTitle.value = title;
 
-    console.log('Title', wName.value);
-    console.log('Url', wUrl.value);
-    domain = (new URL(wUrl.value));
+    url = site_to_pin[0].url;
+    console.log('Url', url);
+    wUrl.value = url;
+
+    favicon = site_to_pin[0].favIconUrl;
+    console.log('Favicon', favicon);
+
+    domain = (new URL(url));
     domain = domain.hostname;
     domain = domain.replace('www.', '');
     console.log('Domain', domain);
-    console.log('Favicon Url', favicon);
-    today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = mm + '/' + dd + '/' + yyyy;
-    console.log('Date Created', today);
+
+    date = new Date();
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+    date = mm + '/' + dd + '/' + yyyy;
+    console.log('Date', date);
 
 });
 
@@ -47,13 +53,13 @@ form.addEventListener('submit', function(event) {
     let isValid = form.checkValidity();
     form.classList.add('was-validated');
     if (isValid === true) {
-        const wNameValue = wName.value;
+        const wTitleValue = wTitle.value;
         const wUrlValue = wUrl.value;
-        const noteValue = note.value;
+        const wNoteValue = wNote.value;
         const pin = {
-            wName: wNameValue,
+            wTitle: wTitleValue,
             wUrl: wUrlValue,
-            note: noteValue,
+            wNote: wNoteValue,
         };
         console.log('Pin created', pin);
         chrome.runtime.sendMessage({
@@ -73,11 +79,26 @@ form.addEventListener('submit', function(event) {
 chrome.runtime.onMessage.addListener(function(request, sender) {
     if (request.action == "getTabDetails") {
         message = request.details;
+
         desc = message.description;
-        imageUrl = message.imageUrl;
-        type = message.type;
         console.log('Description', desc);
-        console.log('Image Url', imageUrl);
+        if (desc)
+            wDesc.value = desc;
+
+        image = message.imageUrl;
+        console.log('Image Url', image);
+        if (image)
+            wImage.setAttribute('src', image);
+        else if (favicon)
+            wImage.setAttribute('src', favicon);
+        else
+            wImage.remove();
+
+        type = message.type;
         console.log('Type', type);
+        if (type)
+            wType.value = type;
+        else
+            wType.value = 'undefined';
     }
 });

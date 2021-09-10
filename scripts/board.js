@@ -2,7 +2,7 @@ const board = document.getElementById('board');
 var msnry = new Masonry('#board', { "percentPosition": true });
 
 function createPin(pin) {
-    const { wName, wUrl, note } = pin;
+    const { wTitle, wUrl, wNote } = pin;
     const card = document.createElement('div');
     card.classList.add('card', 'pin', 'col-4', 'col-sm-3', 'col-md-3', 'col-lg-2');
 
@@ -11,9 +11,9 @@ function createPin(pin) {
     <div class="card-body">
     <a href="${wUrl}" target="_blank">
     <img src="http://s2.googleusercontent.com/s2/favicons?domain_url=${wUrl}">
-    <h5 class="card-title">${wName}</h5>
+    <h5 class="card-title">${wTitle}</h5>
     </a><h6 class="card-subtitle mb-2 text-muted">${wUrl}</h6>
-    <p class="card-text">${note}</p></div>`;
+    <p class="card-text">${wNote}</p></div>`;
 
     board.appendChild(card);
     msnry.appended(card);
