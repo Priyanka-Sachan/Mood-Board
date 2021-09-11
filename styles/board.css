@@ -124,6 +124,22 @@ a:active {
     padding: 8px;
 }
 
+ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    display: inline;
+}
+
+li {
+    display: inline-flex;
+    background: #4a4a52;
+    color: white;
+    border-radius: 15px;
+    margin: 2px 4px;
+    padding: 0px 6px;
+}
+
 ::-webkit-scrollbar {
     width: 4px;
     height: 4px;

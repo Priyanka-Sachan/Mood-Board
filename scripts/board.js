@@ -8,10 +8,14 @@ function getFullDate(date) {
 }
 
 function createPin(pin) {
-    const { wImage, wFavicon, wType, wTitle, wUrl, wDesc, wNote, wDate } = pin;
+    const { wImage, wFavicon, wType, wTitle, wUrl, wTags, wDesc, wNote, wDate } = pin;
     const domain = (new URL(wUrl)).hostname.replace('www.', '');
 
-    // console.log(pin);
+    let tags = '';
+    wTags.forEach((tag) => {
+        tags = tags.concat(`<li>${tag}</li>`);
+    });
+
     const card = document.createElement('div');
     card.classList.add('card', 'pin');
 
@@ -24,8 +28,9 @@ function createPin(pin) {
             <img class = "favicon" src = "${wFavicon}">
             <h5 class = "card-title">${wTitle}</h5>
         </a>
-        <h6 class="card-subtitle mb-2 text-muted">${domain}</h6>
-        <p class="card-text">${wNote}</p>
+        <h6 class="card-subtitle mb-2 text-muted">${domain}</h6><ul>` +
+        tags +
+        `</ul><p class="card-text">${wNote}</p>
         <p class="card-text small text-muted">${wType.toUpperCase()} &bull; ${getFullDate(new Date(wDate))}</p>
     </div>`;
 

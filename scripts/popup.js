@@ -51,6 +51,7 @@ form.addEventListener('submit', function(event) {
             wType: wType.value,
             wTitle: wTitle.value,
             wUrl: wUrl.value,
+            wTags: tags,
             wDesc: wDesc.value,
             wNote: wNote.value,
             wDate: date.toUTCString()
