@@ -5,7 +5,7 @@ const wType = document.getElementById('w_type');
 const wUrl = document.getElementById('w_url');
 const wDesc = document.getElementById('w_desc');
 const wNote = document.getElementById('w_note');
-let image, title, type, favicon, url, desc, note, domain, date;
+let image, title, type, favicon, url, desc, note, date;
 let message;
 
 chrome.windows.getCurrent({ populate: true }, window => {
@@ -35,16 +35,11 @@ chrome.windows.getCurrent({ populate: true }, window => {
     favicon = site_to_pin[0].favIconUrl;
     console.log('Favicon', favicon);
 
-    domain = (new URL(url));
-    domain = domain.hostname;
-    domain = domain.replace('www.', '');
-    console.log('Domain', domain);
-
     date = new Date();
-    var dd = String(date.getDate()).padStart(2, '0');
-    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = date.getFullYear();
-    date = mm + '/' + dd + '/' + yyyy;
+    // var dd = String(date.getDate()).padStart(2, '0');
+    // var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    // var yyyy = date.getFullYear();
+    // date = mm + '/' + dd + '/' + yyyy;
     console.log('Date', date);
 
 });
@@ -53,13 +48,16 @@ form.addEventListener('submit', function(event) {
     let isValid = form.checkValidity();
     form.classList.add('was-validated');
     if (isValid === true) {
-        const wTitleValue = wTitle.value;
-        const wUrlValue = wUrl.value;
-        const wNoteValue = wNote.value;
+
         const pin = {
-            wTitle: wTitleValue,
-            wUrl: wUrlValue,
-            wNote: wNoteValue,
+            wImage: image,
+            wFavicon: favicon,
+            wType: wType.value,
+            wTitle: wTitle.value,
+            wUrl: wUrl.value,
+            wDesc: wDesc.value,
+            wNote: wNote.value,
+            wDate: date.toUTCString()
         };
         console.log('Pin created', pin);
         chrome.runtime.sendMessage({
@@ -96,7 +94,7 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 
         type = message.type;
         console.log('Type', type);
-        if (type)
+        if (type && type in [...wType.options].map(o => o.value))
             wType.value = type;
         else
             wType.value = 'undefined';

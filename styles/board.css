@@ -106,8 +106,13 @@ a:active {
 
 .pin {
     background-color: #F5EEDC;
-    /* max-width: 256px; */
+    width: 256px;
     margin: 8px;
+}
+
+.favicon {
+    width: 16px;
+    height: 16px;
 }
 
 .card-title {

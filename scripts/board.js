@@ -1,19 +1,33 @@
 const board = document.getElementById('board');
 var msnry = new Masonry('#board', { "percentPosition": true });
 
+function getFullDate(date) {
+    const months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+    // return `${date.getFullYear()}, ${months[date.getMonth()]} ${date.getDate()}`;
+    return `${months[date.getMonth()]} ${date.getDate()}`;
+}
+
 function createPin(pin) {
-    const { wTitle, wUrl, wNote } = pin;
+    const { wImage, wFavicon, wType, wTitle, wUrl, wDesc, wNote, wDate } = pin;
+    const domain = (new URL(wUrl)).hostname.replace('www.', '');
+
+    // console.log(pin);
     const card = document.createElement('div');
-    card.classList.add('card', 'pin', 'col-4', 'col-sm-3', 'col-md-3', 'col-lg-2');
+    card.classList.add('card', 'pin');
 
     // Link to license for close.svg: https://fontawesome.com/license
-    card.innerHTML = `<img src="./icons/close.svg" class="close-icon">
+    card.innerHTML =
+        `<img src="./icons/close.svg" class="close-icon">
+    <img src="${wImage?wImage:wFavicon}" class="card-img-top" >
     <div class="card-body">
-    <a href="${wUrl}" target="_blank">
-    <img src="http://s2.googleusercontent.com/s2/favicons?domain_url=${wUrl}">
-    <h5 class="card-title">${wTitle}</h5>
-    </a><h6 class="card-subtitle mb-2 text-muted">${wUrl}</h6>
-    <p class="card-text">${wNote}</p></div>`;
+        <a href="${wUrl}" target = "_blank">
+            <img class = "favicon" src = "${wFavicon}">
+            <h5 class = "card-title">${wTitle}</h5>
+        </a>
+        <h6 class="card-subtitle mb-2 text-muted">${domain}</h6>
+        <p class="card-text">${wNote}</p>
+        <p class="card-text small text-muted">${wType.toUpperCase()} &bull; ${getFullDate(new Date(wDate))}</p>
+    </div>`;
 
     board.appendChild(card);
     msnry.appended(card);
