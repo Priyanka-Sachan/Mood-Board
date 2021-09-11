@@ -97,23 +97,25 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
     }
 });
 
-var txt = document.getElementById('tag_input');
-var list = document.getElementById('list');
-var items = [];
+const txt = document.getElementById('tag_input');
+const tagList = document.getElementById('tag_list');
+let tags = [];
 
 txt.addEventListener('keypress', function(e) {
     if (e.key === ' ') {
         let tag = txt.value;
         if (tag !== '') {
-            if (items.indexOf(tag) >= 0) {
+            if (tags.indexOf(tag) >= 0) {
                 alert('Tag name is a duplicate');
             } else {
                 tag = tag.trim();
-                items.push(tag);
-                list.innerHTML += `<li><span>${tag}</span><a class="close-tag" id="tag-${tag}">X</a></li>`;
+                tags.push(tag);
+                tagList.innerHTML += `<li><span>${tag}</span><a class="close-tag" id="tag-${tag}">X</a></li>`;
                 document.querySelectorAll('.close-tag').forEach(item => {
                     item.addEventListener('click', event => {
-                        console.log(event.target);
+                        console.log(event.currentTarget.parentNode.children[0].innerHTML);
+                        let i = event.currentTarget.parentNode.children[0].innerHTML;
+                        tags = tags.filter(item => tags.indexOf(item) != i);
                         event.currentTarget.parentNode.remove();
                     }, false);
                 });
