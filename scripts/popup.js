@@ -36,10 +36,6 @@ chrome.windows.getCurrent({ populate: true }, window => {
     console.log('Favicon', favicon);
 
     date = new Date();
-    // var dd = String(date.getDate()).padStart(2, '0');
-    // var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-    // var yyyy = date.getFullYear();
-    // date = mm + '/' + dd + '/' + yyyy;
     console.log('Date', date);
 
 });
@@ -98,5 +94,34 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
             wType.value = type;
         else
             wType.value = 'undefined';
+    }
+});
+
+var txt = document.getElementById('tag_input');
+var list = document.getElementById('list');
+var items = [];
+
+txt.addEventListener('keypress', function(e) {
+    if (e.key === ' ') {
+        let tag = txt.value;
+        if (tag !== '') {
+            if (items.indexOf(tag) >= 0) {
+                alert('Tag name is a duplicate');
+            } else {
+                tag = tag.trim();
+                items.push(tag);
+                list.innerHTML += `<li><span>${tag}</span><a class="close-tag" id="tag-${tag}">X</a></li>`;
+                document.querySelectorAll('.close-tag').forEach(item => {
+                    item.addEventListener('click', event => {
+                        console.log(event.target);
+                        event.currentTarget.parentNode.remove();
+                    }, false);
+                });
+                txt.value = '';
+                txt.focus();
+            }
+        } else {
+            alert('Please type a tag Name');
+        }
     }
 });
