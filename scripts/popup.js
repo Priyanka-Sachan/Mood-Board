@@ -116,7 +116,7 @@ txt.addEventListener('keypress', function(e) {
                     item.addEventListener('click', event => {
                         console.log(event.currentTarget.parentNode.children[0].innerHTML);
                         let i = event.currentTarget.parentNode.children[0].innerHTML;
-                        tags = tags.filter(item => tags.indexOf(item) != i);
+                        tags = tags.filter(item => item != i);
                         event.currentTarget.parentNode.remove();
                     }, false);
                 });

@@ -33,5 +33,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
 
         return true;
+    } else if (request.message === 'delete_pin') {
+        console.log('INside delete pins');
+        console.log(request.payload);
+        chrome.storage.local.set({
+            pins: [...request.payload]
+        }, () => {
+            if (chrome.runtime.lastError) {
+                sendResponse({ message: 'fail' });
+                return;
+            }
+            sendResponse({ message: 'success' });
+        });
+        return true;
     }
 });

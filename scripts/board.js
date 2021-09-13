@@ -1,4 +1,5 @@
 const board = document.getElementById('board');
+let pins;
 var msnry = new Masonry('#board', { "percentPosition": true });
 
 function getFullDate(date) {
@@ -39,12 +40,33 @@ function createPin(pin) {
     msnry.layout();
 }
 
+function deletePin(pin) {
+    let i = pin.children[2].children[0].href;
+    pins = pins.filter(pin => pin.wUrl != i);
+    pin.remove();
+    msnry.layout();
+    chrome.runtime.sendMessage({
+        message: 'delete_pin',
+        payload: pins
+    }, response => {
+        if (response.message === 'success') {
+            console.log('Pin deletion succesful.', i);
+        }
+    });
+}
+
 chrome.runtime.sendMessage({
     message: 'get_pins'
 }, response => {
     if (response.message === 'success') {
-        response.payload.forEach(pin_data => {
+        pins = response.payload;
+        pins.forEach(pin_data => {
             createPin(pin_data);
+        });
+        document.querySelectorAll('.close-icon').forEach(item => {
+            item.addEventListener('click', event => {
+                deletePin(event.currentTarget.parentNode);
+            }, false);
         });
     }
 });
