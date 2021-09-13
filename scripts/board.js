@@ -54,6 +54,8 @@ const openNav = document.getElementById('open-nav');
 openNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
+    setTimeout(function() { msnry.layout(); }, 500);
+
 });
 
 const closeNav = document.getElementById('close-nav');
@@ -61,4 +63,5 @@ const closeNav = document.getElementById('close-nav');
 closeNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
+    setTimeout(function() { msnry.layout(); }, 500);
 });
