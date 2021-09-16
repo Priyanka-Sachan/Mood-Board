@@ -1,14 +1,16 @@
 const form = document.getElementById('add-pin-form');
 const wImage = document.getElementById('w_image');
 const wTitle = document.getElementById('w_title');
+const wProject = document.getElementById('w_project');
 const wType = document.getElementById('w_type');
 const wUrl = document.getElementById('w_url');
 const wDesc = document.getElementById('w_desc');
 const wNote = document.getElementById('w_note');
 let image, title, type, favicon, url, desc, note, date;
-let message;
+let message, projects;
 
 chrome.windows.getCurrent({ populate: true }, window => {
+
     const site_to_pin = window.tabs.filter(tab => tab.active);
 
     const tabId = site_to_pin[0].id;
@@ -48,6 +50,7 @@ form.addEventListener('submit', function(event) {
         const pin = {
             wImage: image,
             wFavicon: favicon,
+            wProject: wProject.value,
             wType: wType.value,
             wTitle: wTitle.value,
             wUrl: wUrl.value,
@@ -105,11 +108,11 @@ let tags = [];
 txt.addEventListener('keypress', function(e) {
     if (e.key === ' ') {
         let tag = txt.value;
+        tag = tag.trim();
         if (tag !== '') {
             if (tags.indexOf(tag) >= 0) {
                 alert('Tag name is a duplicate');
             } else {
-                tag = tag.trim();
                 tags.push(tag);
                 tagList.innerHTML += `<li><span>${tag}</span><a class="close-tag" id="tag-${tag}">X</a></li>`;
                 document.querySelectorAll('.close-tag').forEach(item => {
@@ -126,5 +129,33 @@ txt.addEventListener('keypress', function(e) {
         } else {
             alert('Please type a tag Name');
         }
+    }
+});
+
+function addProject(project) {
+    chrome.runtime.sendMessage({
+        message: 'add_project',
+        payload: project
+    }, response => {
+        if (response.message === 'success') {
+            console.log('Project saved', project);
+            window.close();
+        }
+    });
+}
+
+chrome.runtime.sendMessage({
+    message: 'get_projects'
+}, response => {
+    if (response.message === 'success') {
+        projects = response.payload;
+        console.log(projects);
+        projects.forEach(project => {
+            const op = document.createElement('option');
+            op.value = project;
+            op.innerHTML = project;
+            console.log(op);
+            wProject.appendChild(op);
+        });
     }
 });

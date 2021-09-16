@@ -9,7 +9,9 @@ function getFullDate(date) {
 }
 
 function createPin(pin) {
-    const { wImage, wFavicon, wType, wTitle, wUrl, wTags, wDesc, wNote, wDate } = pin;
+    const { wImage, wFavicon, wProject, wType, wTitle, wUrl, wTags, wDesc, wNote, wDate } = pin;
+    console.log('Pin', pin);
+
     const domain = (new URL(wUrl)).hostname.replace('www.', '');
 
     let tags = '';
@@ -32,7 +34,7 @@ function createPin(pin) {
         <h6 class="card-subtitle mb-2 text-muted">${domain}</h6><ul>` +
         tags +
         `</ul><p class="card-text">${wNote}</p>
-        <p class="card-text small text-muted">${wType.toUpperCase()} &bull; ${getFullDate(new Date(wDate))}</p>
+        <p class="card-text small text-muted"> ${wProject} &bull; ${wType.toUpperCase()} &bull; ${getFullDate(new Date(wDate))}</p>
     </div>`;
 
     board.appendChild(card);

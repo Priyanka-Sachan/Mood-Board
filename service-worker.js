@@ -46,5 +46,36 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({ message: 'success' });
         });
         return true;
+    } else if (request.message === 'add_project') {
+        chrome.storage.local.get('projects', data => {
+            if (chrome.runtime.lastError) {
+                sendResponse({ message: 'fail' });
+                return;
+            }
+            chrome.storage.local.set({
+                projects: data.projects ? [...data.projects, request.payload] : [request.payload]
+            }, () => {
+                if (chrome.runtime.lastError) {
+                    sendResponse({ message: 'fail' });
+                    return;
+                }
+                sendResponse({ message: 'success' });
+            });
+        });
+        return true;
+    } else if (request.message === 'get_projects') {
+        chrome.storage.local.get('projects', data => {
+            if (chrome.runtime.lastError) {
+                sendResponse({ message: 'fail' });
+                return;
+            }
+
+            sendResponse({
+                message: 'success',
+                payload: data.projects ? data.projects : []
+            });
+        });
+
+        return true;
     }
 });
