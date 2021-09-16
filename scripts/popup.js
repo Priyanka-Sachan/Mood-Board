@@ -48,18 +48,21 @@ form.addEventListener('submit', function(event) {
     if (isValid === true) {
 
         const pin = {
-            wImage: image,
-            wFavicon: favicon,
-            wProject: wProject.value,
-            wType: wType.value,
-            wTitle: wTitle.value,
-            wUrl: wUrl.value,
-            wTags: tags,
-            wDesc: wDesc.value,
-            wNote: wNote.value,
-            wDate: date.toUTCString()
+            'wImage': image,
+            'wFavicon': favicon,
+            'wProject': wProject.value,
+            'wType': wType.value,
+            'wTitle': wTitle.value,
+            'wUrl': wUrl.value,
+            'wTags': tags,
+            'wDesc': wDesc.value,
+            'wNote': wNote.value,
+            'wDate': date.toUTCString()
         };
         console.log('Pin created', pin);
+
+        if (!(projects.includes(wProject.value.toLowerCase())))
+            addProject(wProject.value.toLowerCase());
         chrome.runtime.sendMessage({
             message: 'save_pin',
             payload: pin
@@ -139,7 +142,6 @@ function addProject(project) {
     }, response => {
         if (response.message === 'success') {
             console.log('Project saved', project);
-            window.close();
         }
     });
 }
@@ -149,13 +151,5 @@ chrome.runtime.sendMessage({
 }, response => {
     if (response.message === 'success') {
         projects = response.payload;
-        console.log(projects);
-        projects.forEach(project => {
-            const op = document.createElement('option');
-            op.value = project;
-            op.innerHTML = project;
-            console.log(op);
-            wProject.appendChild(op);
-        });
     }
 });
