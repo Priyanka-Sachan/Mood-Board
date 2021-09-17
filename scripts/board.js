@@ -1,5 +1,5 @@
 const board = document.getElementById('board');
-let pins;
+let pins, projects;
 var msnry = new Masonry('#board', { "percentPosition": true });
 
 function getFullDate(date) {
@@ -74,6 +74,8 @@ chrome.runtime.sendMessage({
 });
 
 const openNav = document.getElementById('open-nav');
+const closeNav = document.getElementById('close-nav');
+const moodNav = document.getElementById('mood-nav');
 
 openNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "250px";
@@ -81,11 +83,24 @@ openNav.addEventListener('click', () => {
     setTimeout(function() { msnry.layout(); }, 500);
 
 });
-
-const closeNav = document.getElementById('close-nav');
-
 closeNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
     setTimeout(function() { msnry.layout(); }, 500);
+});
+
+chrome.runtime.sendMessage({
+    message: 'get_projects'
+}, response => {
+    if (response.message === 'success') {
+        projects = response.payload;
+        projects.forEach((project) => {
+            const p = document.createElement('a');
+            p.setAttribute('href', '');
+            p.innerHTML = project.replace(
+                /\w\S*/g,
+                (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+            moodNav.appendChild(p);
+        });
+    }
 });
