@@ -2,6 +2,10 @@ const board = document.getElementById('board');
 let pins, projects;
 var msnry = new Masonry('#board', { "percentPosition": true });
 
+const address = window.location.search;
+const params = new URLSearchParams(address);
+getPins();
+
 function getFullDate(date) {
     const months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
     // return `${date.getFullYear()}, ${months[date.getMonth()]} ${date.getDate()}`;
@@ -57,21 +61,35 @@ function deletePin(pin) {
     });
 }
 
-chrome.runtime.sendMessage({
-    message: 'get_pins'
-}, response => {
-    if (response.message === 'success') {
-        pins = response.payload;
-        pins.forEach(pin_data => {
-            createPin(pin_data);
-        });
-        document.querySelectorAll('.close-icon').forEach(item => {
-            item.addEventListener('click', event => {
-                deletePin(event.currentTarget.parentNode);
-            }, false);
+function filterPins() {
+    console.log(params);
+    if (params) {
+        pins = pins.filter((pin) => {
+            if ((params.get('p') && pin['wProject'] != params.get('p')))
+                return false;
+            return true;
         });
     }
-});
+}
+
+function getPins() {
+    chrome.runtime.sendMessage({
+        message: 'get_pins'
+    }, response => {
+        if (response.message === 'success') {
+            pins = response.payload;
+            filterPins();
+            pins.forEach(pin_data => {
+                createPin(pin_data);
+            });
+            document.querySelectorAll('.close-icon').forEach(item => {
+                item.addEventListener('click', event => {
+                    deletePin(event.currentTarget.parentNode);
+                }, false);
+            });
+        }
+    });
+}
 
 const openNav = document.getElementById('open-nav');
 const closeNav = document.getElementById('close-nav');
@@ -96,7 +114,7 @@ chrome.runtime.sendMessage({
         projects = response.payload;
         projects.forEach((project) => {
             const p = document.createElement('a');
-            p.setAttribute('href', '');
+            p.setAttribute('href', `?p=${project}`);
             p.innerHTML = project.replace(
                 /\w\S*/g,
                 (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
