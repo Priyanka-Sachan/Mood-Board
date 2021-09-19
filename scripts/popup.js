@@ -50,7 +50,7 @@ form.addEventListener('submit', function(event) {
         const pin = {
             'wImage': image,
             'wFavicon': favicon,
-            'wProject': wProject.value,
+            'wProject': wProject.value.trim().toLowerCase(),
             'wType': wType.value,
             'wTitle': wTitle.value,
             'wUrl': wUrl.value,
@@ -111,7 +111,7 @@ let tags = [];
 txt.addEventListener('keypress', function(e) {
     if (e.key === ' ') {
         let tag = txt.value;
-        tag = tag.trim();
+        tag = tag.trim().toLowerCase();
         if (tag !== '') {
             if (tags.indexOf(tag) >= 0) {
                 alert('Tag name is a duplicate');

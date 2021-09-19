@@ -1,10 +1,9 @@
 const board = document.getElementById('board');
-let pins, projects;
-var msnry = new Masonry('#board', { "percentPosition": true });
+const moodNav = document.getElementById('mood-nav');
 
-const address = window.location.search;
-const params = new URLSearchParams(address);
-getPins();
+let params = {},
+    pins, filteredPins, projects;
+var msnry = new Masonry('#board', { "percentPosition": true });
 
 function getFullDate(date) {
     const months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
@@ -14,7 +13,6 @@ function getFullDate(date) {
 
 function createPin(pin) {
     const { wImage, wFavicon, wProject, wType, wTitle, wUrl, wTags, wDesc, wNote, wDate } = pin;
-    console.log('Pin', pin);
 
     const domain = (new URL(wUrl)).hostname.replace('www.', '');
 
@@ -25,7 +23,6 @@ function createPin(pin) {
 
     const card = document.createElement('div');
     card.classList.add('card', 'pin');
-
     // Link to license for close.svg: https://fontawesome.com/license
     card.innerHTML =
         `<img src="./icons/close.svg" class="close-icon">
@@ -38,10 +35,22 @@ function createPin(pin) {
         <h6 class="card-subtitle mb-2 text-muted">${domain}</h6><ul>` +
         tags +
         `</ul><p class="card-text">${wNote}</p>
+        <p class="card-text text-muted">${wDesc}</p>
         <p class="card-text small text-muted"> ${wProject.toUpperCase()} &bull; ${wType.toUpperCase()} &bull; ${getFullDate(new Date(wDate))}</p>
     </div>`;
-
     board.appendChild(card);
+
+    tags = document.querySelectorAll('li');
+    tags.forEach((tag) => {
+        tag.addEventListener('click', () => {
+            console.log('Before', params);
+            params = {};
+            params['t'] = tag.innerHTML;
+            console.log('After', params);
+            filterPins();
+        });
+    });
+
     msnry.appended(card);
     msnry.layout();
 }
@@ -49,6 +58,7 @@ function createPin(pin) {
 function deletePin(pin) {
     let i = pin.children[2].children[0].href;
     pins = pins.filter(pin => pin.wUrl != i);
+    filteredPins = filteredPins.filter(pin => pin.wUrl != i);
     pin.remove();
     msnry.layout();
     chrome.runtime.sendMessage({
@@ -62,14 +72,25 @@ function deletePin(pin) {
 }
 
 function filterPins() {
-    console.log(params);
+    console.log('Params', params);
+    board.innerHTML = '';
     if (params) {
-        pins = pins.filter((pin) => {
-            if ((params.get('p') && pin['wProject'] != params.get('p')))
+        filteredPins = pins.filter((pin) => {
+            if ((params['p'] && pin['wProject'] != params['p']) ||
+                (params['t'] && !pin['wTags'].includes(params['t'])))
                 return false;
             return true;
         });
     }
+    console.log('Filtered Pins', filteredPins);
+    filteredPins.forEach(pin_data => {
+        createPin(pin_data);
+    });
+    document.querySelectorAll('.close-icon').forEach(item => {
+        item.addEventListener('click', event => {
+            deletePin(event.currentTarget.parentNode);
+        }, false);
+    });
 }
 
 function getPins() {
@@ -79,21 +100,42 @@ function getPins() {
         if (response.message === 'success') {
             pins = response.payload;
             filterPins();
-            pins.forEach(pin_data => {
-                createPin(pin_data);
-            });
-            document.querySelectorAll('.close-icon').forEach(item => {
-                item.addEventListener('click', event => {
-                    deletePin(event.currentTarget.parentNode);
-                }, false);
-            });
         }
     });
 }
 
+function getProjects() {
+    chrome.runtime.sendMessage({
+        message: 'get_projects'
+    }, response => {
+        if (response.message === 'success') {
+            projects = response.payload;
+            projects.forEach((project) => {
+                const p = document.createElement('a');
+                p.classList.add('project-link');
+                p.innerHTML = project.replace(
+                    /\w\S*/g,
+                    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                moodNav.appendChild(p);
+            });
+            let projectsDOM = document.querySelectorAll('.project-link');
+            projectsDOM.forEach((p) => {
+                p.addEventListener('click', () => {
+                    params = {};
+                    params['p'] = p.innerHTML.toLowerCase();
+                    filterPins();
+                });
+            });
+
+        }
+    });
+}
+
+getPins();
+getProjects();
+
 const openNav = document.getElementById('open-nav');
 const closeNav = document.getElementById('close-nav');
-const moodNav = document.getElementById('mood-nav');
 
 openNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "250px";
@@ -105,20 +147,4 @@ closeNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
     setTimeout(function() { msnry.layout(); }, 500);
-});
-
-chrome.runtime.sendMessage({
-    message: 'get_projects'
-}, response => {
-    if (response.message === 'success') {
-        projects = response.payload;
-        projects.forEach((project) => {
-            const p = document.createElement('a');
-            p.setAttribute('href', `?p=${project}`);
-            p.innerHTML = project.replace(
-                /\w\S*/g,
-                (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-            moodNav.appendChild(p);
-        });
-    }
 });
