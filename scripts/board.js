@@ -140,11 +140,13 @@ const closeNav = document.getElementById('close-nav');
 openNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
+    openNav.style.display = 'none';
     setTimeout(function() { msnry.layout(); }, 500);
 
 });
 closeNav.addEventListener('click', () => {
     document.getElementById("mood-nav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
+    openNav.style.display = 'inline';
     setTimeout(function() { msnry.layout(); }, 500);
 });
