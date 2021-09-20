@@ -67,6 +67,10 @@ function deletePin(pin) {
     }, response => {
         if (response.message === 'success') {
             console.log('Pin deletion succesful.', i);
+        } else {
+            createPin(pin);
+            //TODO: Toast here -- deletion failed.
+            console.log('Pin deletion failed.', i);
         }
     });
 }

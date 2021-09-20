@@ -75,7 +75,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 payload: data.projects ? data.projects : []
             });
         });
-
+        return true;
+    } else if (request.message === 'capture_preview') {
+        chrome.tabs.captureVisibleTab(
+            null, {},
+            data => {
+                if (chrome.runtime.lastError) {
+                    sendResponse({ message: 'fail' });
+                    return;
+                }
+                sendResponse({
+                    message: 'success',
+                    payload: data
+                });
+            });
         return true;
     }
 });

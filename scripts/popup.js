@@ -6,7 +6,7 @@ const wType = document.getElementById('w_type');
 const wUrl = document.getElementById('w_url');
 const wDesc = document.getElementById('w_desc');
 const wNote = document.getElementById('w_note');
-let image, title, type, favicon, url, desc, note, date;
+let image, title, type, favicon, url, desc, note, date, imgPreview;
 let message, projects;
 
 chrome.windows.getCurrent({ populate: true }, window => {
@@ -48,7 +48,7 @@ form.addEventListener('submit', function(event) {
     if (isValid === true) {
 
         const pin = {
-            'wImage': image,
+            'wImage': wImage.getAttribute('src'),
             'wFavicon': favicon,
             'wProject': wProject.value.trim().toLowerCase(),
             'wType': wType.value,
@@ -90,10 +90,11 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
         console.log('Image Url', image);
         if (image)
             wImage.setAttribute('src', image);
-        else if (favicon)
-            wImage.setAttribute('src', favicon);
-        else
-            wImage.remove();
+        // else if (favicon)
+        //     wImage.setAttribute('src', favicon);
+        // else
+        //     wImage.remove();
+        wImage.addEventListener('error', getImagePreview);
 
         type = message.type;
         console.log('Type', type);
@@ -153,3 +154,18 @@ chrome.runtime.sendMessage({
         projects = response.payload;
     }
 });
+
+function getImagePreview() {
+    chrome.runtime.sendMessage({
+        message: 'capture_preview'
+    }, response => {
+        if (response.message === 'success') {
+            console.log('Success', response.payload);
+            wImage.setAttribute('src', response.payload);
+            wImage.removeEventListener('error', getImagePreview);
+
+        } else {
+            wImage.remove();
+        }
+    });
+}
