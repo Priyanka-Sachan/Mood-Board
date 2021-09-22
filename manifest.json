@@ -28,7 +28,8 @@
         "storage",
         "unlimitedStorage",
         "scripting",
-        "activeTab"
+        "activeTab",
+        "contextMenus"
     ],
     "host_permissions": [
         "*://*/*"

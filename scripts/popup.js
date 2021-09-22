@@ -64,7 +64,7 @@ form.addEventListener('submit', function(event) {
         if (!(projects.includes(wProject.value.toLowerCase())))
             addProject(wProject.value.toLowerCase());
         chrome.runtime.sendMessage({
-            message: 'save_pin',
+            message: 'add_pin',
             payload: pin
         }, response => {
             if (response.message === 'success') {
@@ -90,6 +90,8 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
         console.log('Image Url', image);
         if (image)
             wImage.setAttribute('src', image);
+        else
+            getImagePreview();
         // else if (favicon)
         //     wImage.setAttribute('src', favicon);
         // else
@@ -163,7 +165,6 @@ function getImagePreview() {
             console.log('Success', response.payload);
             wImage.setAttribute('src', response.payload);
             wImage.removeEventListener('error', getImagePreview);
-
         } else {
             wImage.remove();
         }
