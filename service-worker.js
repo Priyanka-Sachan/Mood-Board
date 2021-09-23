@@ -31,70 +31,46 @@ function addPin(pin) {
     return true;
 }
 
+function addPinFromCM(image, tab, note) {
+    const date = new Date();
+    const pin = {
+        'wImage': image,
+        'wFavicon': tab.favIconUrl,
+        'wProject': 'inbox',
+        'wType': 'website',
+        'wTitle': tab.title,
+        'wUrl': tab.url,
+        'wTags': [],
+        'wDesc': '',
+        'wNote': note,
+        'wDate': date.toUTCString()
+    };
+    console.log('Pin created', pin);
+    if (addPin(pin)) {
+        console.log({ message: 'success' });
+    } else {
+        console.log({ message: 'fail' });
+    }
+}
+
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     // console.log('Info', info);
     // console.log('Tab', tab);
-    if ('mb-pin' === info.menuItemId) {
-        const date = new Date();
-        const pin = {
-            'wImage': '',
-            'wFavicon': tab.favIconUrl,
-            'wProject': 'inbox',
-            'wType': 'website',
-            'wTitle': tab.title,
-            'wUrl': tab.url,
-            'wTags': [],
-            'wDesc': '',
-            'wNote': '',
-            'wDate': date.toUTCString()
-        };
-        console.log('Pin created', pin);
-        if (addPin(pin)) {
-            console.log({ message: 'success' });
-        } else {
-            console.log({ message: 'fail' });
-        }
-    } else if ('mb-pin-n-note' === info.menuItemId) {
-        const date = new Date();
-        const pin = {
-            'wImage': '',
-            'wFavicon': tab.favIconUrl,
-            'wProject': 'inbox',
-            'wType': 'website',
-            'wTitle': tab.title,
-            'wUrl': tab.url,
-            'wTags': [],
-            'wDesc': '',
-            'wNote': info.selectionText,
-            'wDate': date.toUTCString()
-        };
-        console.log('Pin created', pin);
-        if (addPin(pin)) {
-            console.log({ message: 'success' });
-        } else {
-            console.log({ message: 'fail' });
-        }
+    if ('mb-pin' === info.menuItemId || 'mb-pin-n-note' === info.menuItemId) {
+        const note = info.selectionText ? info.selectionText : '';
+        chrome.tabs.captureVisibleTab(
+            null, {},
+            data => {
+                if (chrome.runtime.lastError) {
+                    addPinFromCM('', tab, note);
+                }
+                addPinFromCM(data, tab, note);
+            });
     }
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'add_pin') {
-        // chrome.storage.local.get('pins', data => {
-        //     if (chrome.runtime.lastError) {
-        //         sendResponse({ message: 'fail' });
-        //         return;
-        //     }
-        //     chrome.storage.local.set({
-        //         pins: data.pins ? [...data.pins, request.payload] : [request.payload]
-        //     }, () => {
-        //         if (chrome.runtime.lastError) {
-        //             sendResponse({ message: 'fail' });
-        //             return;
-        //         }
-        //         sendResponse({ message: 'success' });
-        //     });
-        // });
-        // return true;
         if (addPin(request.payload)) {
             sendResponse({ message: 'success' });
         } else {
