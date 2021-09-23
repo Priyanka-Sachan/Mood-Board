@@ -7,6 +7,11 @@ chrome.runtime.onInstalled.addListener(() => {
         title: "Pin this page",
         contexts: ["page"]
     });
+    chrome.contextMenus.create({
+        id: 'mb-pin-n-note',
+        title: "Pin this page and note",
+        contexts: ["selection"]
+    });
 });
 
 function addPin(pin) {
@@ -27,9 +32,9 @@ function addPin(pin) {
 }
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
+    // console.log('Info', info);
+    // console.log('Tab', tab);
     if ('mb-pin' === info.menuItemId) {
-        // console.log('Info', info);
-        // console.log('Tab', tab);
         const date = new Date();
         const pin = {
             'wImage': '',
@@ -41,6 +46,26 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             'wTags': [],
             'wDesc': '',
             'wNote': '',
+            'wDate': date.toUTCString()
+        };
+        console.log('Pin created', pin);
+        if (addPin(pin)) {
+            console.log({ message: 'success' });
+        } else {
+            console.log({ message: 'fail' });
+        }
+    } else if ('mb-pin-n-note' === info.menuItemId) {
+        const date = new Date();
+        const pin = {
+            'wImage': '',
+            'wFavicon': tab.favIconUrl,
+            'wProject': 'inbox',
+            'wType': 'website',
+            'wTitle': tab.title,
+            'wUrl': tab.url,
+            'wTags': [],
+            'wDesc': '',
+            'wNote': info.selectionText,
             'wDate': date.toUTCString()
         };
         console.log('Pin created', pin);
