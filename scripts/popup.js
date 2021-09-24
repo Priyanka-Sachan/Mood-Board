@@ -6,41 +6,21 @@ const wType = document.getElementById('w_type');
 const wUrl = document.getElementById('w_url');
 const wDesc = document.getElementById('w_desc');
 const wNote = document.getElementById('w_note');
-let image, title, type, favicon, url, desc, note, date, imgPreview;
-let message, projects;
+const tagInput = document.getElementById('tag_input');
+const tagList = document.getElementById('tag_list');
+let tags = [],
+    favicon, date, projects;
 
-chrome.windows.getCurrent({ populate: true }, window => {
-
-    const site_to_pin = window.tabs.filter(tab => tab.active);
-
-    const tabId = site_to_pin[0].id;
-    chrome.scripting.executeScript({
-            target: { 'tabId': tabId },
-            files: ['tabDetails.js'],
-        },
-        () => {
-            // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-            if (chrome.runtime.lastError) {
-                message = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-                console.log('Error:', message);
-            }
-        });
-
-    title = site_to_pin[0].title;
-    console.log('Title', title);
-    wTitle.value = title;
-
-    url = site_to_pin[0].url;
-    console.log('Url', url);
-    wUrl.value = url;
-
-    favicon = site_to_pin[0].favIconUrl;
-    console.log('Favicon', favicon);
-
-    date = new Date();
-    console.log('Date', date);
-
-});
+function addProject(project) {
+    chrome.runtime.sendMessage({
+        message: 'add_project',
+        payload: project
+    }, response => {
+        if (response.message === 'success') {
+            console.log('Project saved:', project);
+        }
+    });
+}
 
 form.addEventListener('submit', function(event) {
     let isValid = form.checkValidity();
@@ -57,9 +37,9 @@ form.addEventListener('submit', function(event) {
             'wTags': tags,
             'wDesc': wDesc.value,
             'wNote': wNote.value,
-            'wDate': date.toUTCString()
+            'wDate': date
         };
-        console.log('Pin created', pin);
+        console.log('Pin created:', pin);
 
         if (!(projects.includes(wProject.value.toLowerCase())))
             addProject(wProject.value.toLowerCase());
@@ -68,7 +48,7 @@ form.addEventListener('submit', function(event) {
             payload: pin
         }, response => {
             if (response.message === 'success') {
-                console.log('Pin saved', pin);
+                console.log('Pin saved:', pin);
                 window.close();
             }
         });
@@ -77,43 +57,9 @@ form.addEventListener('submit', function(event) {
     event.stopPropagation();
 }, false);
 
-chrome.runtime.onMessage.addListener(function(request, sender) {
-    if (request.action == "getTabDetails") {
-        message = request.details;
-
-        desc = message.description;
-        console.log('Description', desc);
-        if (desc)
-            wDesc.value = desc;
-
-        image = message.imageUrl;
-        console.log('Image Url', image);
-        if (image)
-            wImage.setAttribute('src', image);
-        else
-            getImagePreview();
-        // else if (favicon)
-        //     wImage.setAttribute('src', favicon);
-        // else
-        //     wImage.remove();
-        wImage.addEventListener('error', getImagePreview);
-
-        type = message.type;
-        console.log('Type', type);
-        if (type && type in [...wType.options].map(o => o.value))
-            wType.value = type;
-        else
-            wType.value = 'undefined';
-    }
-});
-
-const txt = document.getElementById('tag_input');
-const tagList = document.getElementById('tag_list');
-let tags = [];
-
-txt.addEventListener('keypress', function(e) {
+tagInput.addEventListener('keypress', function(e) {
     if (e.key === ' ') {
-        let tag = txt.value;
+        let tag = tagInput.value;
         tag = tag.trim().toLowerCase();
         if (tag !== '') {
             if (tags.indexOf(tag) >= 0) {
@@ -123,37 +69,17 @@ txt.addEventListener('keypress', function(e) {
                 tagList.innerHTML += `<li><span>${tag}</span><a class="close-tag" id="tag-${tag}">X</a></li>`;
                 document.querySelectorAll('.close-tag').forEach(item => {
                     item.addEventListener('click', event => {
-                        console.log(event.currentTarget.parentNode.children[0].innerHTML);
                         let i = event.currentTarget.parentNode.children[0].innerHTML;
                         tags = tags.filter(item => item != i);
                         event.currentTarget.parentNode.remove();
                     }, false);
                 });
-                txt.value = '';
-                txt.focus();
+                tagInput.value = '';
+                tagInput.focus();
             }
         } else {
             alert('Please type a tag Name');
         }
-    }
-});
-
-function addProject(project) {
-    chrome.runtime.sendMessage({
-        message: 'add_project',
-        payload: project
-    }, response => {
-        if (response.message === 'success') {
-            console.log('Project saved', project);
-        }
-    });
-}
-
-chrome.runtime.sendMessage({
-    message: 'get_projects'
-}, response => {
-    if (response.message === 'success') {
-        projects = response.payload;
     }
 });
 
@@ -162,7 +88,6 @@ function getImagePreview() {
         message: 'capture_preview'
     }, response => {
         if (response.message === 'success') {
-            console.log('Success', response.payload);
             wImage.setAttribute('src', response.payload);
             wImage.removeEventListener('error', getImagePreview);
         } else {
@@ -170,3 +95,42 @@ function getImagePreview() {
         }
     });
 }
+
+function populatePinForm(pin) {
+    wTitle.value = pin.wTitle;
+    wUrl.value = pin.wUrl;
+    if (pin.wDesc)
+        wDesc.value = pin.wDesc;
+    favicon = pin.wFavicon;
+    date = pin.wDate;
+    if (pin.wImage)
+        wImage.setAttribute('src', pin.wImage);
+    else
+        getImagePreview();
+    wImage.addEventListener('error', getImagePreview);
+    if (pin.wType && [...wType.options].map(o => o.value).includes(pin.wType)) {
+        console.log('here!!!!!!');
+        wType.value = pin.wType;
+    } else
+        wType.value = 'undefined';
+}
+let a;
+let b;
+chrome.runtime.sendMessage({
+    message: 'get_projects'
+}, response => {
+    if (response.message === 'success') {
+        projects = response.payload;
+    }
+});
+
+chrome.windows.getCurrent({ populate: true }, window => {
+    const site_to_pin = window.tabs.filter(tab => tab.active);
+    chrome.runtime.sendMessage({
+        message: 'get_current_pin',
+        payload: site_to_pin
+    }, response => {
+        console.log('Pin received from service worker:', response.payload);
+        populatePinForm(response.payload);
+    });
+});

@@ -1,6 +1,3 @@
-let recent_tab_id = null,
-    new_pin_data = {};
-
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: 'mb-pin',
@@ -54,8 +51,6 @@ function addPinFromCM(image, tab, note) {
 }
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    // console.log('Info', info);
-    // console.log('Tab', tab);
     if ('mb-pin' === info.menuItemId || 'mb-pin-n-note' === info.menuItemId) {
         const note = info.selectionText ? info.selectionText : '';
         chrome.tabs.captureVisibleTab(
@@ -70,7 +65,43 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.message === 'add_pin') {
+    if (request.message === 'get_current_pin') {
+        const site_to_pin = request.payload;
+        const date = new Date();
+        let pin = {
+            'wImage': '',
+            'wFavicon': site_to_pin[0].favIconUrl,
+            'wProject': '',
+            'wType': '',
+            'wTitle': site_to_pin[0].title,
+            'wUrl': site_to_pin[0].url,
+            'wTags': [],
+            'wDesc': '',
+            'wNote': '',
+            'wDate': date.toUTCString()
+        };
+        chrome.scripting.executeScript({
+                target: { 'tabId': site_to_pin[0].id },
+                files: ['tabDetails.js'],
+            },
+            (response) => {
+                // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+                if (chrome.runtime.lastError) {
+                    let message = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+                    console.log('Error:', message);
+                } else {
+                    pin['wImage'] = response[0].result.imageUrl;
+                    pin['wDesc'] = response[0].result.description;
+                    pin['wType'] = response[0].result.type;
+                }
+                console.log('Pin created:', pin);
+                sendResponse({
+                    message: 'success',
+                    payload: pin
+                });
+            });
+        return true;
+    } else if (request.message === 'add_pin') {
         if (addPin(request.payload)) {
             sendResponse({ message: 'success' });
         } else {
@@ -82,17 +113,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ message: 'fail' });
                 return;
             }
-
             sendResponse({
                 message: 'success',
                 payload: data.pins ? data.pins : []
             });
         });
-
         return true;
     } else if (request.message === 'delete_pin') {
-        console.log('INside delete pins');
-        console.log(request.payload);
         chrome.storage.local.set({
             pins: [...request.payload]
         }, () => {
@@ -126,7 +153,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ message: 'fail' });
                 return;
             }
-
             sendResponse({
                 message: 'success',
                 payload: data.projects ? data.projects : []
