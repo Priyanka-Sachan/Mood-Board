@@ -1,10 +1,33 @@
 body {
     width: 850px;
+    height: 700px;
     background-color: #ffffff;
 }
 
 body {
     margin: 16px;
+}
+
+.flex-space {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tags-input,
+.is-focused.tags-input,
+.is-active.tags-input {
+    border: none;
+    box-shadow: none;
+}
+
+.textarea,
+.is-hovered.textarea,
+.is-focused.textarea,
+.is-active.textarea {
+    border: none;
+    overflow: auto;
+    box-shadow: none;
 }
 
 ::-webkit-scrollbar {

@@ -56,11 +56,9 @@ body {
     box-shadow: none;
 }
 
-.tags_input,
-.is-active .tags_input,
-.is-focused .tags_input,
-.tags_input:hover,
-.tags_input:active {
+.tags-input,
+.is-focused.tags-input,
+.is-active.tags-input {
     border: none;
     box-shadow: none;
 }
@@ -105,9 +103,10 @@ body {
     padding: 16px;
 }
 
-#command_space {
+.flex-space {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .grid-item {

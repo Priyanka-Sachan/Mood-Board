@@ -1,49 +1,50 @@
 const form = document.getElementById('add-pin-form');
-const wFavicon = document.getElementById('w_favicon');
-const wImage = document.getElementById('w_image');
-const wTitle = document.getElementById('w_title');
-const wType = document.getElementById('w_type');
-const wUrl = document.getElementById('w_url');
-const wTags = document.getElementById('w_tags');
-const wDesc = document.getElementById('w_desc');
-const wNote = document.getElementById('w_note');
-new BulmaTagsInput(wTags);
-const wTagsInput = wTags.BulmaTagsInput();
+const iFavicon = document.getElementById('i-favicon');
+const iImage = document.getElementById('i-image');
+const iTitle = document.getElementById('i-title');
+const iTags = document.getElementById('i-tags');
+new BulmaTagsInput(iTags);
+const iTagsInput = iTags.BulmaTagsInput();
+const iType = document.getElementById('i-type');
+const iUrl = document.getElementById('i-url');
+const iDescription = document.getElementById('i-description');
+const iNote = document.getElementById('i-note');
 
 let pinInfo;
+autosize(document.querySelectorAll('textarea'));
 
 function getImagePreview() {
     chrome.runtime.sendMessage({
         message: 'capture_preview'
     }, response => {
         if (response.message === 'success')
-            wImage.setAttribute('src', response.payload);
+            iImage.setAttribute('src', response.payload);
         else
-            wImage.remove();
-        wImage.removeEventListener('error', getImagePreview);
+            iImage.remove();
+        iImage.removeEventListener('error', getImagePreview);
     });
 }
 
 function populatePinForm() {
-    wUrl.value = pinInfo.url;
     if (pinInfo.favicon)
-        wFavicon.setAttribute('src', pinInfo.favicon);
+        iFavicon.setAttribute('src', pinInfo.favicon);
     const images = pinInfo.images;
-    wImage.addEventListener('error', getImagePreview);
+    iImage.addEventListener('error', getImagePreview);
     if (pinInfo.coverImage)
-        wImage.setAttribute('src', pinInfo.coverImage);
+        iImage.setAttribute('src', pinInfo.coverImage);
     else if (images[0])
-        wImage.setAttribute('src', images[0]);
+        iImage.setAttribute('src', images[0]);
     else
         getImagePreview();
     if (pinInfo.title)
-        wTitle.value = pinInfo.title;
+        iTitle.value = pinInfo.title;
     if (pinInfo.description)
-        wDesc.value = pinInfo.description;
-    if (pinInfo.type && [...wType.options].map(o => o.value).includes(pinInfo.type))
-        wType.value = pinInfo.type;
+        iDescription.value = pinInfo.description;
+    if (pinInfo.type && [...iType.options].map(o => o.value).includes(pinInfo.type))
+        iType.value = pinInfo.type;
     else
-        wType.value = 'undefined';
+        iType.value = 'undefined';
+    autosize.update(document.querySelectorAll('textarea'));
 }
 
 form.addEventListener('submit', function(event) {
@@ -51,15 +52,16 @@ form.addEventListener('submit', function(event) {
     form.classList.add('was-validated');
     if (isValid === true) {
         const pin = {
-            'wImage': wImage.getAttribute('src'),
-            'wFavicon': wFavicon.getAttribute('src'),
-            'wType': wType.value,
-            'wTitle': wTitle.value,
-            'wUrl': wUrl.value,
-            'wTags': wTagsInput.items,
-            'wDesc': wDesc.value,
-            'wNote': wNote.value,
-            'wArticle': pinInfo.preview
+            'image': iImage.getAttribute('src'),
+            'images': pinInfo.images,
+            'favicon': iFavicon.getAttribute('src'),
+            'type': iType.value,
+            'title': iTitle.value,
+            'url': iUrl.value,
+            'tags': iTagsInput.items,
+            'description': iDescription.value,
+            'note': iNote.value,
+            'article': pinInfo.preview
         };
         console.log('Pin created:', pin);
         chrome.runtime.sendMessage({
@@ -78,19 +80,19 @@ form.addEventListener('submit', function(event) {
 
 chrome.windows.getCurrent({ populate: true }, window => {
     const site_to_pin = window.tabs.filter(tab => tab.active);
+    iUrl.value = site_to_pin[0].url;
+    iTitle.value = site_to_pin[0].title;
     chrome.runtime.sendMessage({
         message: 'get_current_document',
         payload: site_to_pin[0].id
     }, response => {
         if (response.message == 'success') {
             const data = '<!DOCTYPE html>' + response.payload[0].result;
-            //...parse the document and populate
             const result = parseDocument(data, site_to_pin[0].url);
             if (result.message == 'success') {
                 pinInfo = result.info;
                 populatePinForm();
             } else {
-                //...Show a toast message
                 console.log('Failed..');
             }
         }

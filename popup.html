@@ -12,49 +12,55 @@
 <body>
     <form id="add-pin-form">
         <figure class="image">
-            <img id="w_image">
+            <img id="i-image">
         </figure>
-        <div>
-            <label for="w_url">URL</label>
-            <input class="input" type="url" id="w_url" required>
+        <div class="control">
+            <input class="input is-static" type="url" id="i-url" placeholder="Enter Url to be fetched..." required>
         </div>
-        <div>
-            <figure class="image is-16x16">
-                <img id="w_favicon">
+        <div class="flex-space">
+            <figure class="image is-24x24">
+                <img id="i-favicon" src="./icons/web.svg">
             </figure>
-            <label for="w_title">Title</label>
-            <input class="input" type="text" id="w_title" aria-describedby="title">
+            <div class="field" style="flex: 1;">
+                <div class="control">
+                    <input class="input is-static is-large" type="text" id="i-title" placeholder="Title..." aria-describedby="title">
+                </div>
+            </div>
         </div>
         <div class="field">
             <div class="control">
-                <input class="input is-static" id="w_tags" type="text" data-type="tags" placeholder="Choose Tags">
+                <input class="input is-static" id="i-tags" type="text" data-type="tags" placeholder="Choose Tags">
             </div>
         </div>
-        <div>
-            <label for="w_type">Type</label>
-            <div class="select">
-                <select id="w_type" aria-label="Type">
-                    <option value="undefined">Undefined</option>
-                    <option value="website">Website</option>
-                    <option value="article">Article</option>
-                    <option value="image">Image</option>
-                    <option value="video">Video</option>
-                    <option value="document">Document</option>
-                </select>
+        <div class="field">
+            <div class="control">
+                <div class="select">
+                    <select id="i-type" aria-label="Type">
+                        <option value="undefined">Undefined</option>
+                        <option value="website">Website</option>
+                        <option value="article">Article</option>
+                        <option value="image">Image</option>
+                        <option value="video">Video</option>
+                        <option value="document">Document</option>
+                    </select>
+                </div>
             </div>
         </div>
-        <div>
-            <label for="w_desc">Description</label>
-            <textarea class="textarea" id="w_desc" rows="3"></textarea>
+        <div class="field">
+            <div class="control">
+                <textarea class="textarea" id="i-description" rows="1" placeholder="Description"></textarea>
+            </div>
         </div>
-        <div>
-            <label for="w_note">Note</label>
-            <textarea class="textarea" id="w_note" rows="3"></textarea>
+        <div class="field">
+            <div class="control">
+                <textarea class="textarea" id="i-note" rows="1" placeholder="Your notes"></textarea>
+            </div>
         </div>
         <button id="add_pin" type="submit" class="button">Submit</button>
     </form>
     <a href="board.html" target="_blank" class="button">Open Board</a>
     <script src="packages/bulma-tagsinput.min.js"></script>
+    <script src="packages/autosize.min.js"></script>
     <script src="packages/Readability.js"></script>
     <script src="scripts/parseDocument.js"></script>
     <script src="scripts/popup.js"></script>
