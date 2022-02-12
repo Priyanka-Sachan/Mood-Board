@@ -1,156 +1,169 @@
-const board = document.getElementById('board');
-const moodNav = document.getElementById('mood-nav');
+const openNavbar = document.getElementById('open_navbar');
+const closeNavbar = document.getElementById('close_navbar');
+const openSidebar = document.getElementById('open_sidebar');
+const closeSidebar = document.getElementById('close_sidebar');
+const minSidebar = document.getElementById('min_sidebar');
+const maxSidebar = document.getElementById('max_sidebar');
 
-let params = {},
-    pins, filteredPins, projects;
-var msnry = new Masonry('#board', { "percentPosition": true });
+const form = document.getElementById('add-pin-form');
+const wFavicon = document.getElementById('w_favicon');
+const wImage = document.getElementById('w_image');
+const wTitle = document.getElementById('w_title');
+const wType = document.getElementById('w_type');
+const wUrl = document.getElementById('w_url');
+const wDesc = document.getElementById('w_desc');
+const wNote = document.getElementById('w_note');
+const fetchUrl = document.getElementById('fetch_url');
+const editArticle = document.getElementById('edit_article');
+const previewArticle = document.getElementById('preview_article');
 
-function getFullDate(date) {
-    const months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-    // return `${date.getFullYear()}, ${months[date.getMonth()]} ${date.getDate()}`;
-    return `${months[date.getMonth()]} ${date.getDate()}`;
-}
+let pinInfo;
 
-function createPin(pin) {
-    const { wImage, wFavicon, wProject, wType, wTitle, wUrl, wTags, wDesc, wNote, wDate } = pin;
-
-    const domain = (new URL(wUrl)).hostname.replace('www.', '');
-
-    let tags = '';
-    wTags.forEach((tag) => {
-        tags = tags.concat(`<li>${tag}</li>`);
-    });
-
-    const card = document.createElement('div');
-    card.classList.add('card', 'pin');
-    // Link to license for close.svg: https://fontawesome.com/license
-    card.innerHTML =
-        `<img src="./icons/close.svg" class="close-icon">
-    <img src="${wImage?wImage:wFavicon}" class="card-img-top" >
-    <div class="card-body">
-        <a href="${wUrl}" target = "_blank">
-            <img class = "favicon" src = "${wFavicon}">
-            <h5 class = "card-title">${wTitle}</h5>
-        </a>
-        <h6 class="card-subtitle mb-2 text-muted">${domain}</h6><ul>` +
-        tags +
-        `</ul><p class="card-text">${wNote}</p>
-        <p class="card-text text-muted">${wDesc}</p>
-        <p class="card-text small text-muted"> ${wProject.toUpperCase()} &bull; ${wType.toUpperCase()} &bull; ${getFullDate(new Date(wDate))}</p>
-    </div>`;
-    board.appendChild(card);
-
-    tags = document.querySelectorAll('li');
-    tags.forEach((tag) => {
-        tag.addEventListener('click', () => {
-            console.log('Before', params);
-            params = {};
-            params['t'] = tag.innerHTML;
-            console.log('After', params);
-            filterPins();
+async function fetchAsync(url) {
+    await fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            //...parse the document and populate
+            const result = parseDocument(data, url);
+            if (result.message == 'success') {
+                pinInfo = result.info;
+                populatePinForm();
+            } else {
+                //...Show a toast message
+            }
         });
-    });
-
-    msnry.appended(card);
-    msnry.layout();
 }
 
-function deletePin(pin) {
-    let i = pin.children[2].children[0].href;
-    pins = pins.filter(pin => pin.wUrl != i);
-    filteredPins = filteredPins.filter(pin => pin.wUrl != i);
-    pin.remove();
-    msnry.layout();
-    chrome.runtime.sendMessage({
-        message: 'delete_pin',
-        payload: pins
-    }, response => {
-        if (response.message === 'success') {
-            console.log('Pin deletion succesful.', i);
-        } else {
-            createPin(pin);
-            //TODO: Toast here -- deletion failed.
-            console.log('Pin deletion failed.', i);
-        }
-    });
-}
-
-function filterPins() {
-    console.log('Params', params);
-    board.innerHTML = '';
-    if (params) {
-        filteredPins = pins.filter((pin) => {
-            if ((params['p'] && pin['wProject'] != params['p']) ||
-                (params['t'] && !pin['wTags'].includes(params['t'])))
-                return false;
-            return true;
-        });
-    }
-    console.log('Filtered Pins', filteredPins);
-    filteredPins.forEach(pin_data => {
-        createPin(pin_data);
-    });
-    document.querySelectorAll('.close-icon').forEach(item => {
-        item.addEventListener('click', event => {
-            deletePin(event.currentTarget.parentNode);
-        }, false);
-    });
-}
-
-function getPins() {
-    chrome.runtime.sendMessage({
-        message: 'get_pins'
-    }, response => {
-        if (response.message === 'success') {
-            pins = response.payload;
-            filterPins();
-        }
-    });
-}
-
-function getProjects() {
-    chrome.runtime.sendMessage({
-        message: 'get_projects'
-    }, response => {
-        if (response.message === 'success') {
-            projects = response.payload;
-            projects.forEach((project) => {
-                const p = document.createElement('a');
-                p.classList.add('project-link');
-                p.innerHTML = project.replace(
-                    /\w\S*/g,
-                    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-                moodNav.appendChild(p);
-            });
-            let projectsDOM = document.querySelectorAll('.project-link');
-            projectsDOM.forEach((p) => {
-                p.addEventListener('click', () => {
-                    params = {};
-                    params['p'] = p.innerHTML.toLowerCase();
-                    filterPins();
-                });
-            });
-
-        }
-    });
-}
-
-getPins();
-getProjects();
-
-const openNav = document.getElementById('open-nav');
-const closeNav = document.getElementById('close-nav');
-
-openNav.addEventListener('click', () => {
-    document.getElementById("mood-nav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-    openNav.style.display = 'none';
-    setTimeout(function() { msnry.layout(); }, 500);
-
+fetchUrl.addEventListener('click', (e) => {
+    fetchAsync(wUrl.value);
 });
-closeNav.addEventListener('click', () => {
-    document.getElementById("mood-nav").style.width = "0";
+
+function populatePinForm() {
+    if (pinInfo.favicon)
+        wFavicon.setAttribute('src', pinInfo.favicon);
+    const images = pinInfo.images;
+    if (pinInfo.coverImage)
+        wImage.setAttribute('src', pinInfo.coverImage);
+    else if (images[0])
+        wImage.setAttribute('src', images[0]);
+    if (pinInfo.title)
+        wTitle.value = pinInfo.title;
+    if (pinInfo.description)
+        wDesc.value = pinInfo.description;
+    if (pinInfo.type && [...wType.options].map(o => o.value).includes(pinInfo.type))
+        wType.value = pinInfo.type;
+    else
+        wType.value = 'undefined';
+    if (pinInfo.preview)
+        editor.txt.html(pinInfo.preview);
+    autosize.update(document.querySelectorAll('textarea'));
+}
+
+const E = window.wangEditor;
+const editor = new E('#editor');
+editor.config.height = window.innerHeight - 100;
+
+editor.config.fontNames = [
+    'Arial',
+    'Tahoma',
+    'Verdana',
+    'Times New Roman',
+    'Courier New',
+];
+editor.config.excludeMenus = [
+    'redo',
+    'undo'
+]
+editor.config.lang = 'en';
+editor.i18next = window.i18next;
+editor.create();
+// Disabled editor by disable API
+editArticle.addEventListener('click', () => {
+    editor.enable();
+});
+
+// Cancel disabled by enable API
+previewArticle.addEventListener('click', () => {
+    editor.disable();
+});
+
+//For later on.....
+//editor.txt.html()
+
+function openNav() {
+    document.getElementById("navbar").style.width = "200px";
+    document.getElementById("main").style.marginLeft = "200px";
+}
+
+function closeNav() {
+    document.getElementById("navbar").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
-    openNav.style.display = 'inline';
-    setTimeout(function() { msnry.layout(); }, 500);
+}
+
+openNavbar.addEventListener(('click'), (e) => {
+    openNav();
+    openNavbar.style.display = 'none';
 });
+closeNavbar.addEventListener(('click'), (e) => {
+    closeNav();
+    openNavbar.style.display = 'inline';
+});
+
+function openSide() {
+    document.getElementById("sidebar-1").style.width = "40%";
+    document.getElementById("main").style.marginRight = "40%";
+}
+
+function closeSide() {
+    document.getElementById("sidebar-1").style.width = "0";
+    document.getElementById("main").style.marginRight = "0";
+}
+
+openSidebar.addEventListener(('click'), (e) => {
+    openSide();
+    openSidebar.style.display = 'none';
+    closeSidebar.style.display = 'inline';
+});
+closeSidebar.addEventListener(('click'), (e) => {
+    closeSide();
+    openSidebar.style.display = 'inline';
+    closeSidebar.style.display = 'none';
+});
+
+
+function maxSide() {
+    document.getElementById("sidebar-1").style.width = "40%";
+    document.getElementById("sidebar-1").style.marginRight = "60%";
+    document.getElementById("sidebar-1").style.paddingLeft = "16px";
+    document.getElementById("sidebar-1").style.paddingRight = "16px";
+    document.getElementById("sidebar-2").style.width = "60%";
+    document.getElementById("sidebar-2").style.paddingLeft = "16px";
+    document.getElementById("sidebar-2").style.paddingRight = "16px";
+    document.getElementById("command_space").style.display = "none";
+    document.getElementById("main").style.marginRight = "100%";
+}
+
+function minSide() {
+    document.getElementById("sidebar-1").style.width = "40%";
+    document.getElementById("sidebar-1").style.marginRight = "0";
+    document.getElementById("sidebar-1").style.paddingLeft = "0";
+    document.getElementById("sidebar-1").style.paddingRight = "0";
+    document.getElementById("sidebar-2").style.width = "0";
+    document.getElementById("sidebar-2").style.paddingLeft = "0";
+    document.getElementById("sidebar-2").style.paddingRight = "0";
+    document.getElementById("command_space").style.display = "flex";
+    document.getElementById("main").style.marginRight = "40%";
+}
+
+maxSidebar.addEventListener(('click'), (e) => {
+    maxSide();
+    maxSidebar.style.display = 'none';
+    minSidebar.style.display = 'inline';
+});
+minSidebar.addEventListener(('click'), (e) => {
+    minSide();
+    maxSidebar.style.display = 'inline';
+    minSidebar.style.display = 'none';
+});
+
+autosize(document.querySelectorAll('textarea'));

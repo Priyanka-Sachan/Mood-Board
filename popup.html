@@ -3,71 +3,53 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="packages/bootstrap.min.css">
+    <link rel="stylesheet" href="packages/bulma.min.css">
     <link rel="stylesheet" href="styles/popup.css">
-    <title>Mood Board</title>
+    <title>Rich Link</title>
 </head>
 
 <body>
-    <div class="row">
-        <div class="col">
-            <form id="add-pin-form" class="needs-validation" novalidate>
-                <img class="img-thumbnail" id="w_image">
-                <div class="mb-3">
-                    <label for="w_title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="w_title" aria-describedby="title" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid title.
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="w_project" class="form-label">Project</label>
-                    <input type="text" class="form-control" id="w_project" value="inbox" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid project name.
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="w_type" class="form-label">Type</label>
-                    <select class="form-select" id="w_type" aria-label="Type">
+    <form id="add-pin-form">
+        <figure class="image">
+            <img id="w_image">
+        </figure>
+        <div>
+            <label for="w_url">URL</label>
+            <input class="input" type="url" id="w_url" required>
+        </div>
+        <div>
+            <figure class="image is-16x16">
+                <img id="w_favicon">
+            </figure>
+            <label for="w_title">Title</label>
+            <input class="input" type="text" id="w_title" aria-describedby="title">
+        </div>
+        <div>
+            <label for="w_type">Type</label>
+            <div class="select">
+                <select id="w_type" aria-label="Type">
                     <option value="undefined">Undefined</option>
                     <option value="website">Website</option>
                     <option value="article">Article</option>
                     <option value="image">Image</option>
                     <option value="video">Video</option>
                     <option value="document">Document</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                    <label for="tag_input" class="form-label">Tags</label>
-                    <div class="form-control">
-                        <ul id="tag_list"></ul>
-                        <input type="text" id="tag_input" placeholder="Enter tags...">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="w_url" class="form-label">URL</label>
-                    <input type="url" class="form-control" id="w_url" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid url.
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="w_desc" class="form-label">Description</label>
-                    <textarea class="form-control" id="w_desc" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="w_note" class="form-label">Note</label>
-                    <textarea class="form-control" id="w_note" rows="3"></textarea>
-                </div>
-                <button id="add_pin" type="submit" class="btn btn-warning">Submit</button>
-            </form>
+                </select>
+            </div>
         </div>
-        <div class="col">
-            <a href="board.html" target="_blank" class="btn btn-warning">Open Board</a>
+        <div>
+            <label for="w_desc">Description</label>
+            <textarea class="textarea" id="w_desc" rows="3"></textarea>
         </div>
-    </div>
-    <script src="packages/bootstrap.bundle.min.js"></script>
+        <div>
+            <label for="w_note">Note</label>
+            <textarea class="textarea" id="w_note" rows="3"></textarea>
+        </div>
+        <button id="add_pin" type="submit" class="button">Submit</button>
+    </form>
+    <a href="board.html" target="_blank" class="button">Open Board</a>
+    <script src="packages/Readability.js"></script>
+    <script src="scripts/parseDocument.js"></script>
     <script src="scripts/popup.js"></script>
 
 </body>

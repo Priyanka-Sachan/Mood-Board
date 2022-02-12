@@ -1,120 +1,107 @@
 body {
-    background-color: #4a4a52;
+    background-color: #ffffff;
 }
 
-#open-nav {
-    color: white;
-    width: 32px;
-    height: 32px;
-    margin: 16px;
-    display: inline;
-    transition: 0.5s;
-}
-
-.sidenav {
+#navbar {
     height: 100%;
     width: 0;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #F5EEDC;
+    background-color: whitesmoke;
     overflow-x: hidden;
     padding-top: 60px;
     transition: 0.5s;
 }
 
-.sidenav a {
-    padding: 8px 8px 8px 32px;
+#navbar a {
+    padding: 4px 8px 4px 32px;
     text-decoration: none;
-    font-size: 25px;
-    color: #818181;
+    font-size: 18px;
+    color: #333;
     display: block;
     transition: 0.3s;
 }
 
-.sidenav a:hover {
-    color: #F06060;
+#open_navbar {
+    cursor: pointer;
 }
 
-.sidenav #close-nav {
+#close_navbar {
+    cursor: pointer;
     position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+
+/* #sidebar {
+    padding: 16px;
+} */
+
+#sidebar-1 {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
     top: 0;
     right: 0;
-    width: 32px;
-    height: 32px;
-    margin: 16px;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 
-@media screen and (max-height: 450px) {
-    .sidenav {
-        padding-top: 15px;
-    }
-    .sidenav a {
-        font-size: 18px;
-    }
+#sidebar-1 textarea {
+    border-style: none;
+    border-color: transparent;
+    overflow: auto;
+    box-shadow: none;
+}
+
+#open_sidebar {
+    cursor: pointer;
+}
+
+#close_sidebar {
+    display: none;
+    cursor: pointer;
+}
+
+#sidebar-2 {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+#max_sidebar {
+    cursor: pointer;
+}
+
+#min_sidebar {
+    display: none;
+    cursor: pointer;
 }
 
 
-/* Bookmarks */
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 
 #main {
     transition: margin-left .5s;
-    padding: 20px;
-    padding-top: 0px;
+    padding: 16px;
 }
 
-a:hover,
-a:visited,
-a:link,
-a:active {
-    color: black;
-    text-decoration: none;
-}
-
-.close-icon {
-    width: 10px;
-    height: 10px;
-    position: relative;
-    top: 16px;
-    cursor: pointer;
-    align-self: flex-end;
-}
-
-.pin {
-    background-color: #F5EEDC;
-    width: 256px;
-    margin: 8px;
-}
-
-.favicon {
-    width: 16px;
-    height: 16px;
-}
-
-.card-title {
-    display: inline;
-    margin: 8px;
-}
-
-.card-body {
-    padding: 8px;
-}
-
-ul {
-    list-style: none;
-    margin: 0px;
-    padding: 0px;
-    display: inline;
-}
-
-li {
-    display: inline-flex;
-    background: #4a4a52;
-    color: white;
-    border-radius: 15px;
-    margin: 2px 4px;
-    padding: 0px 6px;
+#command_space {
+    display: flex;
+    align-items: center;
 }
 
 ::-webkit-scrollbar {

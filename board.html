@@ -5,31 +5,91 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Board</title>
-    <link rel="stylesheet" href="packages/bootstrap.min.css">
+    <title>Rich Links</title>
+    <link rel="stylesheet" href="packages/bulma.min.css">
     <link rel="stylesheet" href="styles/board.css">
 </head>
 
 <body>
-    <div id="mood-nav" class="sidenav">
-        <img src="icons/close.svg" id="close-nav">
+    <div id="navbar">
+        <img class="image is-24x24" id="close_navbar" src="./icons/close.svg" alt="Close Navbar">
+        <a href="#">Inbox</a>
+        <a href="#">Design</a>
+        <a href="#">Web Dev</a>
+        <a href="#">Seminar</a>
     </div>
-
-    <!-- Bookmarks -->
     <div id="main">
-        <nav class="navbar">
-            <div class="container-fluid">
-                <img src="icons/bars.svg" id="open-nav">
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                </form>
-            </div>
-        </nav>
-        <div class="row" id="board"></div>
+        <div id="command_space">
+            <img class="image is-24x24" id="open_navbar" src="./icons/bars.svg" alt="Open Navbar">
+            <input class="input" type="text" placeholder="Search">
+            <img class="image is-24x24" id="open_sidebar" src="./icons/move-left.svg" alt="Open Sidenar">
+            <img class="image is-24x24" id="close_sidebar" src="./icons/move-right.svg" alt="Close Sidenar">
+        </div>
     </div>
-
-    <script src="packages/bootstrap.bundle.min.js"></script>
-    <script src="packages/masonry.pkgd.min.js"></script>
+    <div id="sidebar">
+        <div id="sidebar-1">
+            <div style="display: flex; justify-content: space-between;">
+                <img class="image is-24x24" id="min_sidebar" src="./icons/minimize.svg" alt="Minimize Sidenar">
+                <img class="image is-24x24" id="max_sidebar" src="./icons/maximize.svg" alt="Maximize Sidenar">
+                <div class="field">
+                    <div class="control">
+                        <div class="select">
+                            <select id="w_type" aria-label="Type">
+                                <option value="undefined">Undefined</option>
+                                <option value="website">Website</option>
+                                <option value="article">Article</option>
+                                <option value="image">Image</option>
+                                <option value="video">Video</option>
+                                <option value="document">Document</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form id="add-pin-form">
+                <figure class="image">
+                    <img id="w_image">
+                </figure>
+                <div class="control" style="display: flex;align-items: center;">
+                    <input class="input is-static" type="url" id="w_url" placeholder="Enter Url to be fetched..." required>
+                    <img src="./icons/ok.svg" id="fetch_url" alt="Fetch Url">
+                </div>
+                <div style="display: flex;align-items: center;">
+                    <figure class="image is-24x24">
+                        <img id="w_favicon" src="./icons/web.svg">
+                    </figure>
+                    <div class="field" style="flex: 1;">
+                        <div class="control">
+                            <input class="input is-static is-large" type="text" id="w_title" placeholder="Title..." aria-describedby="title">
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <textarea class="textarea" id="w_desc" rows="1" placeholder="Description"></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <textarea class="textarea" id="w_note" rows="1" placeholder="Your notes"></textarea>
+                    </div>
+                </div>
+                <button id="add_pin" type="submit" class="button">Submit</button>
+            </form>
+        </div>
+        <div id="sidebar-2">
+            <button class="button" id="edit_article">EDIT</button>
+            <button class="button" id="preview_article">PREVIEW</button>
+            <div id="editor">
+                <p>Write your article or notes or thoughts or anything that can be converted to binary😀 </p>
+            </div>
+        </div>
+    </div>
+    <script src="packages/autosize.min.js"></script>
+    <script src="packages/i18next.min.js"></script>
+    <script src="packages/wangEditor.min.js"></script>
+    <script src="packages/Readability.js"></script>
+    <script src="scripts/parseDocument.js"></script>
     <script src="scripts/board.js"></script>
 
 </body>

@@ -1,61 +1,10 @@
 body {
     width: 850px;
-    background-color: #F5EEDC;
+    background-color: #ffffff;
 }
 
-form {
+body {
     margin: 16px;
-}
-
-ul {
-    list-style: none;
-    margin: 0px;
-    padding: 0px;
-    display: inline;
-}
-
-li {
-    display: inline-flex;
-    background: #4a4a52;
-    color: white;
-    padding: 3px 5px 3px 10px;
-    border-radius: 15px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-}
-
-li a {
-    color: white;
-    text-decoration: none;
-    margin-left: 5px;
-    font-size: 10px;
-    background: #4a4a52;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    display: inline-flex;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
-
-li a:hover {
-    background-color: white;
-    color: #4a4a52;
-}
-
-#tag_input {
-    border: 0px;
-    background: none;
-    width: 128px;
-}
-
-#tag_input:focus {
-    outline: 0;
-}
-
-label {
-    display: block;
 }
 
 ::-webkit-scrollbar {
