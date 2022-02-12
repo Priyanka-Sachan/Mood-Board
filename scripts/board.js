@@ -10,6 +10,7 @@ const form = document.getElementById('add-pin-form');
 const wFavicon = document.getElementById('w_favicon');
 const wImage = document.getElementById('w_image');
 const wTitle = document.getElementById('w_title');
+const wTags = document.getElementById('w_tags');
 const wType = document.getElementById('w_type');
 const wUrl = document.getElementById('w_url');
 const wDesc = document.getElementById('w_desc');
@@ -17,7 +18,8 @@ const wNote = document.getElementById('w_note');
 const fetchUrl = document.getElementById('fetch_url');
 const editArticle = document.getElementById('edit_article');
 const previewArticle = document.getElementById('preview_article');
-
+new BulmaTagsInput(wTags);
+const wTagsInput = wTags.BulmaTagsInput();
 const masonry = new Masonry(board, {
     columnWidth: '.grid-sizer',
     itemSelector: '.grid-item',
@@ -50,6 +52,7 @@ form.addEventListener('submit', function(event) {
             'wType': wType.value,
             'wTitle': wTitle.value,
             'wUrl': wUrl.value,
+            'wTags': wTagsInput.items,
             'wDesc': wDesc.value,
             'wNote': wNote.value,
             'wArticle': editor.txt.html()
@@ -206,10 +209,13 @@ minSidebar.addEventListener(('click'), (e) => {
 autosize(document.querySelectorAll('textarea'));
 
 function createPin(pin) {
-    const { wImage, wFavicon, wType, wTitle, wUrl, wDesc, wNote } = pin;
+    const { wImage, wFavicon, wType, wTitle, wUrl, wTags, wDesc, wNote } = pin;
 
     const domain = (new URL(wUrl)).hostname.replace('www.', '');
-
+    let tags = '';
+    wTags.forEach((tag) => {
+        tags = tags.concat(`<span class="tag">${tag}</span>`);
+    });
     const card = document.createElement('div');
     card.classList.add('grid-item', 'column', 'is-half-tablet', 'is-one-third-desktop', 'is-one-quarter-widescreen', 'is-one-fifth-fullhd');
     card.innerHTML = `
@@ -227,13 +233,18 @@ function createPin(pin) {
       </figure>
     </div>`}
         <div class="media-content">
+        <p class="subtitle is-6">${domain}</p>
           <p class="title is-4">${wTitle}</p>
-          <p class="subtitle is-6">${domain}</p>
+          <div class="tags">
+            ${tags}
+            </div>
         </div>
       </div>
-      <div class="content">${wDesc}</div>
-    </div>
-    </div>`;
+      <div>
+        </div>
+<div class="content">${wDesc}</div>
+    </div >
+    </div > `;
     board.appendChild(card);
     masonry.appended(card);
     masonry.layout();
@@ -245,10 +256,10 @@ function filterPins() {
     filteredPins.forEach(pin_data => {
         createPin(pin_data);
     });
-    imagesLoaded( board,function() {
+    imagesLoaded(board, function () {
         // init Masonry after all images have loaded
         masonry.layout();
-      });
+    });
 }
 
 function getPins() {

@@ -4,8 +4,11 @@ const wImage = document.getElementById('w_image');
 const wTitle = document.getElementById('w_title');
 const wType = document.getElementById('w_type');
 const wUrl = document.getElementById('w_url');
+const wTags = document.getElementById('w_tags');
 const wDesc = document.getElementById('w_desc');
 const wNote = document.getElementById('w_note');
+new BulmaTagsInput(wTags);
+const wTagsInput = wTags.BulmaTagsInput();
 
 let pinInfo;
 
@@ -53,6 +56,7 @@ form.addEventListener('submit', function(event) {
             'wType': wType.value,
             'wTitle': wTitle.value,
             'wUrl': wUrl.value,
+            'wTags': wTagsInput.items,
             'wDesc': wDesc.value,
             'wNote': wNote.value,
             'wArticle': pinInfo.preview

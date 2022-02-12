@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moody's Board</title>
     <link rel="stylesheet" href="packages/bulma.min.css">
+    <link rel="stylesheet" href="packages/bulma-tagsinput.min.css">
     <link rel="stylesheet" href="styles/board.css">
 </head>
 
@@ -70,6 +71,11 @@
                 </div>
                 <div class="field">
                     <div class="control">
+                        <input class="input is-static" id="w_tags" type="text" data-type="tags" placeholder="Choose Tags">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
                         <textarea class="textarea" id="w_desc" rows="1" placeholder="Description"></textarea>
                     </div>
                 </div>
@@ -89,6 +95,7 @@
             </div>
         </div>
     </div>
+    <script src="packages/bulma-tagsinput.min.js"></script>
     <script src="packages/imagesloaded.pkgd.min.js"></script>
     <script src="packages/masonry.pkgd.min.js"></script>
     <script src="packages/autosize.min.js"></script>

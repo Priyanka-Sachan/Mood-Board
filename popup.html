@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="packages/bulma.min.css">
+    <link rel="stylesheet" href="packages/bulma-tagsinput.min.css">
     <link rel="stylesheet" href="styles/popup.css">
     <title>Moody's Board</title>
 </head>
@@ -23,6 +24,11 @@
             </figure>
             <label for="w_title">Title</label>
             <input class="input" type="text" id="w_title" aria-describedby="title">
+        </div>
+        <div class="field">
+            <div class="control">
+                <input class="input is-static" id="w_tags" type="text" data-type="tags" placeholder="Choose Tags">
+            </div>
         </div>
         <div>
             <label for="w_type">Type</label>
@@ -48,6 +54,7 @@
         <button id="add_pin" type="submit" class="button">Submit</button>
     </form>
     <a href="board.html" target="_blank" class="button">Open Board</a>
+    <script src="packages/bulma-tagsinput.min.js"></script>
     <script src="packages/Readability.js"></script>
     <script src="scripts/parseDocument.js"></script>
     <script src="scripts/popup.js"></script>
