@@ -71,6 +71,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         } else {
             sendResponse({ message: 'fail' });
         }
+    } else if (request.message === 'get_pins') {
+        chrome.storage.local.get('pins', data => {
+            if (chrome.runtime.lastError) {
+                sendResponse({ message: 'fail' });
+                return;
+            }
+            sendResponse({
+                message: 'success',
+                payload: data.pins ? data.pins : []
+            });
+        });
+        return true;
     } else if (request.message === 'capture_preview') {
         chrome.tabs.captureVisibleTab(
             null, {},

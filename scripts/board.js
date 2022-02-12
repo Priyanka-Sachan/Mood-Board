@@ -5,6 +5,7 @@ const closeSidebar = document.getElementById('close_sidebar');
 const minSidebar = document.getElementById('min_sidebar');
 const maxSidebar = document.getElementById('max_sidebar');
 
+const board = document.getElementById('board');
 const form = document.getElementById('add-pin-form');
 const wFavicon = document.getElementById('w_favicon');
 const wImage = document.getElementById('w_image');
@@ -192,3 +193,54 @@ minSidebar.addEventListener(('click'), (e) => {
 });
 
 autosize(document.querySelectorAll('textarea'));
+
+function createPin(pin) {
+    const { wImage, wFavicon, wType, wTitle, wUrl, wDesc, wNote } = pin;
+
+    const domain = (new URL(wUrl)).hostname.replace('www.', '');
+
+    const card = document.createElement('div');
+    card.innerHTML = `<div class="card">
+    <div class="card-image">
+      <figure class="image is-4by3">
+        <img src="${wImage?wImage:wFavicon}">
+      </figure>
+    </div>
+    <div class="card-content">
+      <div class="media">
+        <div class="media-left">
+          <figure class="image is-48x48">
+            <img src="${wFavicon}">
+          </figure>
+        </div>
+        <div class="media-content">
+          <p class="title is-4">${wTitle}</p>
+          <p class="subtitle is-6">${domain}</p>
+        </div>
+      </div>
+      <div class="content">${wDesc}</div>
+    </div>
+  </div>`;
+    board.appendChild(card);
+}
+
+function filterPins() {
+    board.innerHTML = '';
+    filteredPins = pins;
+    filteredPins.forEach(pin_data => {
+        createPin(pin_data);
+    });
+}
+
+function getPins() {
+    chrome.runtime.sendMessage({
+        message: 'get_pins'
+    }, response => {
+        if (response.message === 'success') {
+            pins = response.payload;
+            filterPins();
+        }
+    });
+}
+
+getPins();
