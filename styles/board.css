@@ -35,11 +35,6 @@ body {
     right: 16px;
 }
 
-
-/* #sidebar {
-    padding: 16px;
-} */
-
 #sidebar-1 {
     height: 100%;
     width: 0;
@@ -51,6 +46,7 @@ body {
     transition: 0.5s;
     padding-top: 16px;
     padding-bottom: 16px;
+    background-color: white;
 }
 
 #sidebar-1 textarea {
@@ -80,6 +76,7 @@ body {
     transition: 0.5s;
     padding-top: 16px;
     padding-bottom: 16px;
+    background-color: white;
 }
 
 #max_sidebar {
@@ -102,6 +99,14 @@ body {
 #command_space {
     display: flex;
     align-items: center;
+}
+
+.grid-item {
+    padding: 8px;
+}
+
+.columns {
+    margin: 0;
 }
 
 ::-webkit-scrollbar {

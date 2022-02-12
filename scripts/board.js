@@ -18,6 +18,11 @@ const fetchUrl = document.getElementById('fetch_url');
 const editArticle = document.getElementById('edit_article');
 const previewArticle = document.getElementById('preview_article');
 
+const masonry = new Masonry(board, {
+    columnWidth: '.grid-sizer',
+    itemSelector: '.grid-item',
+});
+
 let pinInfo;
 
 async function fetchAsync(url) {
@@ -129,10 +134,12 @@ function closeNav() {
 openNavbar.addEventListener(('click'), (e) => {
     openNav();
     openNavbar.style.display = 'none';
+    setTimeout(function() { masonry.layout(); }, 500);
 });
 closeNavbar.addEventListener(('click'), (e) => {
     closeNav();
     openNavbar.style.display = 'inline';
+    setTimeout(function() { masonry.layout(); }, 500);
 });
 
 function openSide() {
@@ -149,11 +156,13 @@ openSidebar.addEventListener(('click'), (e) => {
     openSide();
     openSidebar.style.display = 'none';
     closeSidebar.style.display = 'inline';
+    setTimeout(function() { masonry.layout(); }, 500);
 });
 closeSidebar.addEventListener(('click'), (e) => {
     closeSide();
     openSidebar.style.display = 'inline';
     closeSidebar.style.display = 'none';
+    setTimeout(function() { masonry.layout(); }, 500);
 });
 
 
@@ -185,11 +194,13 @@ maxSidebar.addEventListener(('click'), (e) => {
     maxSide();
     maxSidebar.style.display = 'none';
     minSidebar.style.display = 'inline';
+    setTimeout(function() { masonry.layout(); }, 500);
 });
 minSidebar.addEventListener(('click'), (e) => {
     minSide();
     maxSidebar.style.display = 'inline';
     minSidebar.style.display = 'none';
+    setTimeout(function() { masonry.layout(); }, 500);
 });
 
 autosize(document.querySelectorAll('textarea'));
@@ -200,19 +211,21 @@ function createPin(pin) {
     const domain = (new URL(wUrl)).hostname.replace('www.', '');
 
     const card = document.createElement('div');
-    card.innerHTML = `<div class="card">
-    <div class="card-image">
-      <figure class="image is-4by3">
-        <img src="${wImage?wImage:wFavicon}">
-      </figure>
-    </div>
+    card.classList.add('grid-item', 'column', 'is-half-tablet', 'is-one-third-desktop', 'is-one-quarter-widescreen', 'is-one-fifth-fullhd');
+    card.innerHTML = `
+    <div class="card">
+    ${wImage ? `<div class="card-image">
+    <figure class="image">
+      <img src="${wImage}">
+    </figure>
+  </div>`: ''}
     <div class="card-content">
       <div class="media">
-        <div class="media-left">
-          <figure class="image is-48x48">
-            <img src="${wFavicon}">
-          </figure>
-        </div>
+      ${wImage ? '' : `<div class="media-left">
+      <figure class="image is-48x48">
+        <img src="${wFavicon}">
+      </figure>
+    </div>`}
         <div class="media-content">
           <p class="title is-4">${wTitle}</p>
           <p class="subtitle is-6">${domain}</p>
@@ -220,16 +233,22 @@ function createPin(pin) {
       </div>
       <div class="content">${wDesc}</div>
     </div>
-  </div>`;
+    </div>`;
     board.appendChild(card);
+    masonry.appended(card);
+    masonry.layout();
 }
 
 function filterPins() {
-    board.innerHTML = '';
+    board.innerHTML = '<div class="grid-sizer"></div>';
     filteredPins = pins;
     filteredPins.forEach(pin_data => {
         createPin(pin_data);
     });
+    imagesLoaded( board,function() {
+        // init Masonry after all images have loaded
+        masonry.layout();
+      });
 }
 
 function getPins() {
