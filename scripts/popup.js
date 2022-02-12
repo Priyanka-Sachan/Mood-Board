@@ -43,6 +43,35 @@ function populatePinForm() {
         wType.value = 'undefined';
 }
 
+form.addEventListener('submit', function(event) {
+    let isValid = form.checkValidity();
+    form.classList.add('was-validated');
+    if (isValid === true) {
+        const pin = {
+            'wImage': wImage.getAttribute('src'),
+            'wFavicon': wFavicon.getAttribute('src'),
+            'wType': wType.value,
+            'wTitle': wTitle.value,
+            'wUrl': wUrl.value,
+            'wDesc': wDesc.value,
+            'wNote': wNote.value,
+            'wArticle': pinInfo.preview
+        };
+        console.log('Pin created:', pin);
+        chrome.runtime.sendMessage({
+            message: 'add_pin',
+            payload: pin
+        }, response => {
+            if (response.message === 'success') {
+                console.log('Pin saved:', pin);
+                window.close();
+            }
+        });
+    }
+    event.preventDefault();
+    event.stopPropagation();
+}, false);
+
 chrome.windows.getCurrent({ populate: true }, window => {
     const site_to_pin = window.tabs.filter(tab => tab.active);
     chrome.runtime.sendMessage({

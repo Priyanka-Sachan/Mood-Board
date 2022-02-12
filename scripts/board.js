@@ -34,6 +34,34 @@ async function fetchAsync(url) {
         });
 }
 
+form.addEventListener('submit', function(event) {
+    let isValid = form.checkValidity();
+    form.classList.add('was-validated');
+    if (isValid === true) {
+        const pin = {
+            'wImage': wImage.getAttribute('src'),
+            'wFavicon': wFavicon.getAttribute('src'),
+            'wType': wType.value,
+            'wTitle': wTitle.value,
+            'wUrl': wUrl.value,
+            'wDesc': wDesc.value,
+            'wNote': wNote.value,
+            'wArticle': editor.txt.html()
+        };
+        console.log('Pin created:', pin);
+        chrome.runtime.sendMessage({
+            message: 'add_pin',
+            payload: pin
+        }, response => {
+            if (response.message === 'success') {
+                console.log('Pin saved:', pin);
+            }
+        });
+    }
+    event.preventDefault();
+    event.stopPropagation();
+}, false);
+
 fetchUrl.addEventListener('click', (e) => {
     fetchAsync(wUrl.value);
 });
@@ -86,9 +114,6 @@ editArticle.addEventListener('click', () => {
 previewArticle.addEventListener('click', () => {
     editor.disable();
 });
-
-//For later on.....
-//editor.txt.html()
 
 function openNav() {
     document.getElementById("navbar").style.width = "200px";

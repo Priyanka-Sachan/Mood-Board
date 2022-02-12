@@ -43,11 +43,34 @@ const getTabDetails = (tabId, sendResponse) => {
         });
 }
 
+function addPin(pin) {
+    chrome.storage.local.get('pins', data => {
+        if (chrome.runtime.lastError) {
+            return false;
+        }
+        chrome.storage.local.set({
+            pins: data.pins ? [...data.pins, pin] : [pin]
+        }, () => {
+            if (chrome.runtime.lastError) {
+                return false;
+            }
+            return true;
+        });
+    });
+    return true;
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'get_current_document') {
         const site_to_pin = request.payload;
         getTabDetails(site_to_pin, sendResponse);
         return true;
+    } else if (request.message === 'add_pin') {
+        if (addPin(request.payload)) {
+            sendResponse({ message: 'success' });
+        } else {
+            sendResponse({ message: 'fail' });
+        }
     } else if (request.message === 'capture_preview') {
         chrome.tabs.captureVisibleTab(
             null, {},
