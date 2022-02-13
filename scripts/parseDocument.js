@@ -20,18 +20,18 @@ const parseDocument = (data, url) => {
             l.href = new URL(l.getAttribute('href'), url).href;
         });
         const docClone = doc.cloneNode(true);
-        const article = new Readability(docClone).parse();
-        let preview;
-        if (article) {
-            if (article.title)
-                preview = `<h1>${article.title}</h1>` + article.content;
+        const content = new Readability(docClone).parse();
+        let article;
+        if (content) {
+            if (content.title)
+                article = `<h1>${content.title}</h1>` + content.content;
             else if (title)
-                preview = `<h1>${title}</h1>` + article.content;
+                article = `<h1>${title}</h1>` + content.content;
             else
-                preview = article.content;
+                article = content.content;
         }
         let domain = (new URL(url));
-        domain = domain.hostname;
+        domain = domain.hostname.replace('www.', '');
         const coverImage = (doc.querySelector('meta[property~="og:image"]') && new URL(doc.querySelector('meta[property~="og:image"]').content, url).href) ||
             (doc.querySelector('meta[property~="twitter:image"]') && new URL(doc.querySelector('meta[property~="twitter:image"]').content, url).href);
         let images = [];
@@ -60,7 +60,7 @@ const parseDocument = (data, url) => {
                 title,
                 description,
                 type,
-                preview
+                article
             }
         };
         console.log(result);

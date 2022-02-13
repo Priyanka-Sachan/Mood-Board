@@ -52,7 +52,7 @@ body {
 #sidebar-1 textarea {
     border-style: none;
     border-color: transparent;
-    overflow: auto;
+    /* overflow: auto; */
     box-shadow: none;
 }
 
@@ -115,6 +115,13 @@ body {
 
 .columns {
     margin: 0;
+}
+
+.edit-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 16px;
 }
 
 .tags {

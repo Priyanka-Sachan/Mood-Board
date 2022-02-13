@@ -25,7 +25,7 @@ function getImagePreview() {
     });
 }
 
-function populatePinForm() {
+function populatePinForm(pinInfo) {
     if (pinInfo.favicon)
         iFavicon.setAttribute('src', pinInfo.favicon);
     const images = pinInfo.images;
@@ -52,16 +52,18 @@ form.addEventListener('submit', function(event) {
     form.classList.add('was-validated');
     if (isValid === true) {
         const pin = {
+            'id': Date.now(),
             'image': iImage.getAttribute('src'),
             'images': pinInfo.images,
             'favicon': iFavicon.getAttribute('src'),
             'type': iType.value,
             'title': iTitle.value,
             'url': iUrl.value,
+            'domain': (new URL(iUrl.value)).hostname.replace('www.', ''),
             'tags': iTagsInput.items,
             'description': iDescription.value,
             'note': iNote.value,
-            'article': pinInfo.preview
+            'article': pinInfo.article
         };
         console.log('Pin created:', pin);
         chrome.runtime.sendMessage({
@@ -91,7 +93,7 @@ chrome.windows.getCurrent({ populate: true }, window => {
             const result = parseDocument(data, site_to_pin[0].url);
             if (result.message == 'success') {
                 pinInfo = result.info;
-                populatePinForm();
+                populatePinForm(result.info);
             } else {
                 console.log('Failed..');
             }

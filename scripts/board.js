@@ -33,8 +33,7 @@ const masonry = new Masonry(board, {
 let pins, filteredPins;
 
 function createPin(pin) {
-    const { image, images, favicon, type, title, url, tags, description, note } = pin;
-    const domain = (new URL(url)).hostname.replace('www.', '');
+    const { id, image, images, favicon, type, title, url, domain, tags, description, note } = pin;
     let tagsList = '';
     tags.forEach((tag) => {
         tagsList = tagsList.concat(`<span class="tag">${tag}</span>`);
@@ -42,7 +41,7 @@ function createPin(pin) {
     const card = document.createElement('div');
     card.classList.add('grid-item', 'column', 'is-half-tablet', 'is-one-third-desktop', 'is-one-quarter-widescreen', 'is-one-fifth-fullhd');
     card.innerHTML = `
-    <div class="card">
+    <div class="card" id="${id}">
         ${image ? `<div class="card-image">
             <figure class="image">
                 <img src="${image}">
@@ -65,6 +64,9 @@ function createPin(pin) {
         </div>
         <div class="content">${description}</div>
         </div >
+        <figure class="image is-24x24 edit-btn">
+                <img src="./icons/edit.svg">
+        </figure>
     </div > `;
     board.appendChild(card);
     masonry.appended(card);
@@ -90,6 +92,14 @@ function getPins() {
         if (response.message === 'success') {
             pins = response.payload;
             filterPins();
+            document.querySelectorAll('.edit-btn').forEach(item => {
+                item.addEventListener('click', event => {
+                    const id = parseInt(event.currentTarget.parentNode.id);
+                    const pin = pins.find((p) => p.id == id);
+                    openSide();
+                    populatePinForm(pin);
+                }, false);
+            });
         }
     });
 }
@@ -115,25 +125,25 @@ const iNote = document.getElementById('i-note');
 function openSide() {
     document.getElementById("sidebar-1").style.width = "40%";
     document.getElementById("main").style.marginRight = "40%";
+    openSidebar.style.display = 'none';
+    closeSidebar.style.display = 'inline';
+    setTimeout(function () { masonry.layout(); }, 500);
 }
 
 function closeSide() {
     document.getElementById("sidebar-1").style.width = "0";
     document.getElementById("main").style.marginRight = "0";
+    openSidebar.style.display = 'inline';
+    closeSidebar.style.display = 'none';
+    setTimeout(function () { masonry.layout(); }, 500);
 }
 
 openSidebar.addEventListener(('click'), (e) => {
     openSide();
-    openSidebar.style.display = 'none';
-    closeSidebar.style.display = 'inline';
-    setTimeout(function () { masonry.layout(); }, 500);
 });
 
 closeSidebar.addEventListener(('click'), (e) => {
     closeSide();
-    openSidebar.style.display = 'inline';
-    closeSidebar.style.display = 'none';
-    setTimeout(function () { masonry.layout(); }, 500);
 });
 
 let pinInfo;
@@ -146,15 +156,29 @@ async function fetchAsync(url) {
             //...parse the document and populate
             const result = parseDocument(data, url);
             if (result.message == 'success') {
-                pinInfo = result.info;
-                populatePinForm();
+                // pinInfo = result.info;
+                populatePinForm(result.info);
             } else {
                 //...Show a toast message
             }
         });
 }
+function clearPinForm() {
+    iUrl.value = '';
+    iFavicon.setAttribute('src', '');
+    const images = [];
+    iImage.setAttribute('src', '');
+    iTitle.value = '';
+    iDescription.value = '';
+    iType.value = 'undefined';
+    editor.txt.html('');
+    autosize.update(document.querySelectorAll('textarea'));
+}
 
-function populatePinForm() {
+function populatePinForm(pinInfo) {
+    clearPinForm();
+    if (pinInfo.url)
+        iUrl.value = pinInfo.url;
     if (pinInfo.favicon)
         iFavicon.setAttribute('src', pinInfo.favicon);
     const images = pinInfo.images;
@@ -170,8 +194,8 @@ function populatePinForm() {
         iType.value = pinInfo.type;
     else
         iType.value = 'undefined';
-    if (pinInfo.preview)
-        editor.txt.html(pinInfo.preview);
+    if (pinInfo.article)
+        editor.txt.html(pinInfo.article);
     autosize.update(document.querySelectorAll('textarea'));
 }
 
@@ -180,11 +204,14 @@ form.addEventListener('submit', function (event) {
     form.classList.add('was-validated');
     if (isValid === true) {
         const pin = {
+            'id': Date.now(),
             'image': iImage.getAttribute('src'),
             'favicon': iFavicon.getAttribute('src'),
+            'images': [],
             'type': iType.value,
             'title': iTitle.value,
             'url': iUrl.value,
+            'domain': (new URL(iUrl.value)).hostname.replace('www.', ''),
             'tags': iTagsInput.items,
             'description': iDescription.value,
             'note': iNote.value,
