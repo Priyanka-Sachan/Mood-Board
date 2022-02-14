@@ -32,7 +32,7 @@ const parseDocument = (data, url) => {
         }
         let domain = (new URL(url));
         domain = domain.hostname.replace('www.', '');
-        const coverImage = (doc.querySelector('meta[property~="og:image"]') && new URL(doc.querySelector('meta[property~="og:image"]').content, url).href) ||
+        const image = (doc.querySelector('meta[property~="og:image"]') && new URL(doc.querySelector('meta[property~="og:image"]').content, url).href) ||
             (doc.querySelector('meta[property~="twitter:image"]') && new URL(doc.querySelector('meta[property~="twitter:image"]').content, url).href);
         let images = [];
         doc.querySelectorAll('img').forEach((i) => {
@@ -54,7 +54,7 @@ const parseDocument = (data, url) => {
             'info': {
                 url,
                 domain,
-                coverImage,
+                image,
                 images,
                 favicon,
                 title,

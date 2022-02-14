@@ -1,6 +1,7 @@
 const form = document.getElementById('add-pin-form');
 const iFavicon = document.getElementById('i-favicon');
 const iImage = document.getElementById('i-image');
+const iImages = document.getElementById('i-images');
 const iTitle = document.getElementById('i-title');
 const iTags = document.getElementById('i-tags');
 new BulmaTagsInput(iTags);
@@ -29,9 +30,15 @@ function populatePinForm(pinInfo) {
     if (pinInfo.favicon)
         iFavicon.setAttribute('src', pinInfo.favicon);
     const images = pinInfo.images;
+    images.forEach((i) => {
+        const img = document.createElement('img');
+        img.src = i;
+        img.classList.add('item');
+        iImages.appendChild(img);
+    });
     iImage.addEventListener('error', getImagePreview);
-    if (pinInfo.coverImage)
-        iImage.setAttribute('src', pinInfo.coverImage);
+    if (pinInfo.image)
+        iImage.setAttribute('src', pinInfo.image);
     else if (images[0])
         iImage.setAttribute('src', images[0]);
     else
@@ -54,7 +61,7 @@ form.addEventListener('submit', function(event) {
         const pin = {
             'id': Date.now(),
             'image': iImage.getAttribute('src'),
-            'images': pinInfo.images,
+            'images': Array.from(iImages.childNodes, i => i.src),
             'favicon': iFavicon.getAttribute('src'),
             'type': iType.value,
             'title': iTitle.value,

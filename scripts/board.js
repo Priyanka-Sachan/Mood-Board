@@ -167,7 +167,7 @@ async function fetchAsync(url) {
 function clearPinForm() {
     iUrl.value = '';
     iFavicon.setAttribute('src', '');
-    iImages.innerHTML='';
+    iImages.innerHTML = '';
     iImage.setAttribute('src', '');
     iTitle.value = '';
     iDescription.value = '';
@@ -182,15 +182,16 @@ function populatePinForm(pinInfo) {
         iUrl.value = pinInfo.url;
     if (pinInfo.favicon)
         iFavicon.setAttribute('src', pinInfo.favicon);
-    pinInfo.images.forEach((i)=>{
-        const img=document.createElement('img');
-        img.src=i;
+    const images = pinInfo.images;
+    images.forEach((i) => {
+        const img = document.createElement('img');
+        img.src = i;
         img.classList.add('item');
         iImages.appendChild(img);
     });
-    width = carousel.offsetWidth;
-    if (pinInfo.coverImage)
-        iImage.setAttribute('src', pinInfo.coverImage);
+    console.log(pinInfo.image);
+    if (pinInfo.image)
+        iImage.setAttribute('src', pinInfo.image);
     else if (images[0])
         iImage.setAttribute('src', images[0]);
     if (pinInfo.title)
@@ -214,7 +215,7 @@ form.addEventListener('submit', function (event) {
             'id': Date.now(),
             'image': iImage.getAttribute('src'),
             'favicon': iFavicon.getAttribute('src'),
-            'images': Array.from(iImages.childNodes,i=>i.src),
+            'images': Array.from(iImages.childNodes, i => i.src),
             'type': iType.value,
             'title': iTitle.value,
             'url': iUrl.value,

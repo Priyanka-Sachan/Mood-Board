@@ -8,6 +8,40 @@ body {
     margin: 16px;
 }
 
+#wrapper {
+    width: 100%;
+    position: relative;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#carousel {
+    overflow: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+#carousel::-webkit-scrollbar {
+    height: 0;
+}
+
+#i-images {
+    display: flex;
+    grid-gap: 8px;
+    grid-auto-flow: column;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+.item {
+    height: 128px;
+    background: transparent;
+    margin: 4px;
+}
+
 .flex-space {
     display: flex;
     align-items: center;
