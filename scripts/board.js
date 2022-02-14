@@ -112,6 +112,7 @@ const closeSidebar = document.getElementById('close_sidebar');
 const fetchUrl = document.getElementById('fetch_url');
 const form = document.getElementById('add-pin-form');
 const iFavicon = document.getElementById('i-favicon');
+const iImages = document.getElementById("i-images");
 const iImage = document.getElementById('i-image');
 const iTitle = document.getElementById('i-title');
 const iTags = document.getElementById('i-tags');
@@ -166,7 +167,7 @@ async function fetchAsync(url) {
 function clearPinForm() {
     iUrl.value = '';
     iFavicon.setAttribute('src', '');
-    const images = [];
+    iImages.innerHTML='';
     iImage.setAttribute('src', '');
     iTitle.value = '';
     iDescription.value = '';
@@ -181,7 +182,13 @@ function populatePinForm(pinInfo) {
         iUrl.value = pinInfo.url;
     if (pinInfo.favicon)
         iFavicon.setAttribute('src', pinInfo.favicon);
-    const images = pinInfo.images;
+    pinInfo.images.forEach((i)=>{
+        const img=document.createElement('img');
+        img.src=i;
+        img.classList.add('item');
+        iImages.appendChild(img);
+    });
+    width = carousel.offsetWidth;
     if (pinInfo.coverImage)
         iImage.setAttribute('src', pinInfo.coverImage);
     else if (images[0])
@@ -207,7 +214,7 @@ form.addEventListener('submit', function (event) {
             'id': Date.now(),
             'image': iImage.getAttribute('src'),
             'favicon': iFavicon.getAttribute('src'),
-            'images': [],
+            'images': Array.from(iImages.childNodes,i=>i.src),
             'type': iType.value,
             'title': iTitle.value,
             'url': iUrl.value,
