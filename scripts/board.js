@@ -27,8 +27,7 @@ closeNavbar.addEventListener(('click'), (e) => {
 // Main
 const board = document.getElementById('board');
 const masonry = new Masonry(board, {
-    columnWidth: '.grid-sizer',
-    itemSelector: '.grid-item',
+    itemSelector: '.grid-item'
 });
 let pins, filteredPins;
 
@@ -39,7 +38,7 @@ function createPin(pin) {
         tagsList = tagsList.concat(`<span class="tag">${tag}</span>`);
     });
     const card = document.createElement('div');
-    card.classList.add('grid-item', 'column', 'is-half-tablet', 'is-one-third-desktop', 'is-one-quarter-widescreen', 'is-one-fifth-fullhd');
+    card.classList.add('grid-item', 'column');
     card.innerHTML = `
     <div class="card" id="${id}">
         ${image ? `<div class="card-image">
@@ -74,7 +73,7 @@ function createPin(pin) {
 }
 
 function filterPins() {
-    board.innerHTML = '<div class="grid-sizer"></div>';
+    board.innerHTML = '';
     filteredPins = pins;
     filteredPins.forEach(pin_data => {
         createPin(pin_data);
@@ -128,7 +127,9 @@ function openSide() {
     document.getElementById("main").style.marginRight = "40%";
     openSidebar.style.display = 'none';
     closeSidebar.style.display = 'inline';
-    setTimeout(function () { masonry.layout(); }, 500);
+    window.cqApi.reevaluate(false, function () {
+        masonry.layout();
+    });
 }
 
 function closeSide() {
@@ -136,7 +137,9 @@ function closeSide() {
     document.getElementById("main").style.marginRight = "0";
     openSidebar.style.display = 'inline';
     closeSidebar.style.display = 'none';
-    setTimeout(function () { masonry.layout(); }, 500);
+    window.cqApi.reevaluate(false, function () {
+        masonry.layout();
+    });
 }
 
 openSidebar.addEventListener(('click'), (e) => {

@@ -147,6 +147,26 @@ body {
     padding: 8px;
 }
 
+.grid-item[data-cq~="max-width:700px"] {
+    width: 100%;
+}
+
+.grid-item[data-cq~="min-width:700px"] {
+    width: 50%;
+}
+
+.grid-item[data-cq~="min-width:1024px"] {
+    width: 33.33%;
+}
+
+.grid-item[data-cq~="min-width:1216px"] {
+    width: 25%;
+}
+
+.grid-item[data-cq~="min-width:1408px"] {
+    width: 20%;
+}
+
 .columns {
     margin: 0;
 }
