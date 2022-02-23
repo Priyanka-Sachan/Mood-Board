@@ -61,7 +61,7 @@ form.addEventListener('submit', function(event) {
         const pin = {
             'id': Date.now(),
             'image': iImage.getAttribute('src'),
-            'images': Array.from(iImages.childNodes, i => i.src),
+            'images': Array.from(iImages.children, i => i.src),
             'favicon': iFavicon.getAttribute('src'),
             'type': iType.value,
             'title': iTitle.value,

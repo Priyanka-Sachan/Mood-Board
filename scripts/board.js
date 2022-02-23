@@ -180,6 +180,7 @@ function clearPinForm() {
 }
 
 function populatePinForm(pinInfo) {
+    console.log(pinInfo);
     clearPinForm();
     if (pinInfo.url)
         iUrl.value = pinInfo.url;
@@ -192,7 +193,7 @@ function populatePinForm(pinInfo) {
         img.classList.add('item');
         iImages.appendChild(img);
     });
-    console.log(pinInfo.image);
+    // console.log(pinInfo.image);
     if (pinInfo.image)
         iImage.setAttribute('src', pinInfo.image);
     else if (images[0])

@@ -55,7 +55,6 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
 }
 
@@ -78,9 +77,12 @@ body {
 }
 
 .item {
-    height: 128px;
+    height: 64px;
+    width: 64px;
     background: transparent;
-    margin: 4px;
+    margin: 2px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 #sidebar-1 textarea {
@@ -128,9 +130,6 @@ body {
     display: none;
     cursor: pointer;
 }
-
-
-/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 
 #main {
     transition: margin-left .5s;
