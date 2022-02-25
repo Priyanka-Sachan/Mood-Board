@@ -90,6 +90,8 @@ body {
     border-color: transparent;
     /* overflow: auto; */
     box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .tags-input,
@@ -97,6 +99,10 @@ body {
 .is-active.tags-input {
     border: none;
     box-shadow: none;
+}
+
+.tags-input .input {
+    margin: 0;
 }
 
 #open_sidebar {
@@ -176,6 +182,13 @@ body {
     position: absolute;
     top: 16px;
     right: 16px;
+}
+
+.delete-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 48px;
 }
 
 .tags {

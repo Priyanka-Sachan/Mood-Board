@@ -65,6 +65,9 @@ function getPinData(pin) {
         <figure class="image is-24x24 edit-btn">
                 <img src="./icons/edit.svg">
         </figure>
+        <figure class="image is-24x24 delete-btn">
+                <img src="./icons/delete.svg">
+        </figure>
     </div > `;
     return pinData;
 }
@@ -110,6 +113,22 @@ function getPins() {
                     }
                 }, false);
             });
+            document.querySelectorAll('.delete-btn').forEach(item => {
+                item.addEventListener('click', event => {
+                    const id = parseInt(event.currentTarget.parentNode.id);
+                    const target = event.currentTarget.parentNode.parentNode;
+                    chrome.runtime.sendMessage({
+                        message: 'delete_pin',
+                        payload: id
+                    }, response => {
+                        if (response.message === 'success') {
+                            console.log('Pin deleted:', id);
+                            target.remove();
+                            masonry.layout();
+                        }
+                    });
+                }, false);
+            });
         }
     });
 }
@@ -125,12 +144,14 @@ const iFavicon = document.getElementById('i-favicon');
 const iImages = document.getElementById("i-images");
 const iImage = document.getElementById('i-image');
 const iTitle = document.getElementById('i-title');
+iTitle.style.width = '100px';
 const iTags = document.getElementById('i-tags');
 new BulmaTagsInput(iTags);
 const iTagsInput = iTags.BulmaTagsInput();
 const iType = document.getElementById('i-type');
 const iUrl = document.getElementById('i-url');
 const iDescription = document.getElementById('i-description');
+iDescription.style.width = '100px';
 const iNote = document.getElementById('i-note');
 
 function openSide() {
@@ -140,7 +161,7 @@ function openSide() {
     closeSidebar.style.display = 'inline';
     window.cqApi.reevaluate(false, function () {
         masonry.layout();
-        autosize.update(document.querySelectorAll('textarea'));
+        //autosize.update(document.querySelectorAll('textarea'));
     });
 }
 
@@ -185,11 +206,13 @@ async function fetchAsync(url) {
 }
 function clearPinForm() {
     iUrl.value = '';
-    iFavicon.setAttribute('src', '');
+    iFavicon.setAttribute('src', './icons/web.svg');
     iImages.innerHTML = '';
     iImage.setAttribute('src', '');
     iTitle.value = '';
+    // iTitle.style.width = '100px';
     iDescription.value = '';
+    // iDescription.style.width = '100px';
     iType.value = 'undefined';
     editor.txt.html('');
     autosize.update(document.querySelectorAll('textarea'));
