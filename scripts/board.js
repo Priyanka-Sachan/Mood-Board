@@ -101,9 +101,13 @@ function getPins() {
                 item.addEventListener('click', event => {
                     const id = parseInt(event.currentTarget.parentNode.id);
                     pinInfo = pins.find((p) => p.id == id);
-                    openSide();
-                    mode = 1;
-                    populatePinForm(pinInfo);
+                    if (pinInfo) {
+                        mode = 1;
+                        populatePinForm(pinInfo);
+                        openSide();
+                    } else {
+                        //...Toast cannot open bookmark
+                    }
                 }, false);
             });
         }
@@ -136,6 +140,7 @@ function openSide() {
     closeSidebar.style.display = 'inline';
     window.cqApi.reevaluate(false, function () {
         masonry.layout();
+        autosize.update(document.querySelectorAll('textarea'));
     });
 }
 
@@ -148,6 +153,7 @@ function closeSide() {
     window.cqApi.reevaluate(false, function () {
         masonry.layout();
     });
+    clearPinForm();
 }
 
 openSidebar.addEventListener(('click'), (e) => {
@@ -218,7 +224,8 @@ function populatePinForm(pinInfo) {
         iType.value = 'undefined';
     if (pinInfo.article)
         editor.txt.html(pinInfo.article);
-    autosize.update(document.querySelectorAll('textarea'));
+    // autosize.update(document.querySelectorAll('textarea'));
+    setTimeout(function () { autosize.update(document.querySelectorAll('textarea')); }, 500);
 }
 
 form.addEventListener('submit', function (event) {
