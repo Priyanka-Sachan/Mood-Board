@@ -1,6 +1,10 @@
 // Navbar
 const openNavbar = document.getElementById('open_navbar');
 const closeNavbar = document.getElementById('close_navbar');
+const iProject = document.getElementById('i-project');
+const addProject = document.getElementById('add_project');
+const projectsBoard = document.getElementById('projects-board');
+let projects;
 
 function openNav() {
     document.getElementById("navbar").style.width = "200px";
@@ -23,6 +27,49 @@ closeNavbar.addEventListener(('click'), (e) => {
     openNavbar.style.display = 'inline';
     setTimeout(function() { masonry.layout(); }, 500);
 });
+
+addProject.addEventListener('click', (e) => {
+    const name = iProject.value;
+    if (name) {
+        const project = {
+            'id': Date.now(),
+            'name': name,
+            'description': ''
+        }
+        chrome.runtime.sendMessage({
+            message: 'add_project',
+            payload: project
+        }, response => {
+            if (response.message === 'success') {
+                console.log('Project added', project);
+                //...add to projects
+                const p = document.createElement('a');
+                p.innerHTML = project.name;
+                //...p.href=?
+                projectsBoard.appendChild(p);
+                iProject.value = '';
+            }
+        });
+    }
+}, false);
+
+function getProjects() {
+    chrome.runtime.sendMessage({
+        message: 'get_projects'
+    }, response => {
+        if (response.message === 'success') {
+            projects = response.payload;
+            projects.forEach((project) => {
+                const p = document.createElement('a');
+                p.innerHTML = project.name;
+                //...p.href=?
+                projectsBoard.appendChild(p);
+            });
+        }
+    });
+}
+
+getProjects();
 
 // Main
 const board = document.getElementById('board');

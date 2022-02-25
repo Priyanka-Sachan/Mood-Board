@@ -99,6 +99,23 @@ function deletePin(id) {
     return true;
 }
 
+function addProject(project) {
+    chrome.storage.local.get('projects', data => {
+        if (chrome.runtime.lastError) {
+            return false;
+        }
+        chrome.storage.local.set({
+            projects: data.projects ? [...data.projects, project] : [project]
+        }, () => {
+            if (chrome.runtime.lastError) {
+                return false;
+            }
+            return true;
+        });
+    });
+    return true;
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'get_current_document') {
         const site_to_pin = request.payload;
@@ -147,6 +164,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     payload: data
                 });
             });
+        return true;
+    } else if (request.message === 'add_project') {
+        if (addProject(request.payload)) {
+            sendResponse({ message: 'success' });
+        } else {
+            sendResponse({ message: 'fail' });
+        }
+    } else if (request.message === 'get_projects') {
+        chrome.storage.local.get('projects', data => {
+            if (chrome.runtime.lastError) {
+                sendResponse({ message: 'fail' });
+                return;
+            }
+            sendResponse({
+                message: 'success',
+                payload: data.projects ? data.projects : []
+            });
+        });
         return true;
     }
 });
