@@ -1,7 +1,7 @@
 // Navbar
 const openNavbar = document.getElementById('open_navbar');
 const closeNavbar = document.getElementById('close_navbar');
-const iProject = document.getElementById('i-project');
+const iNewProject = document.getElementById('i-new-project');
 const addProject = document.getElementById('add_project');
 const projectsBoard = document.getElementById('projects-board');
 let projects;
@@ -29,7 +29,7 @@ closeNavbar.addEventListener(('click'), (e) => {
 });
 
 addProject.addEventListener('click', (e) => {
-    const name = iProject.value;
+    const name = iNewProject.value;
     if (name) {
         const project = {
             'id': Date.now(),
@@ -42,16 +42,28 @@ addProject.addEventListener('click', (e) => {
         }, response => {
             if (response.message === 'success') {
                 console.log('Project added', project);
-                //...add to projects
-                const p = document.createElement('a');
-                p.innerHTML = project.name;
-                //...p.href=?
-                projectsBoard.appendChild(p);
-                iProject.value = '';
+                addProjectToNavbar(project);
+                addProjectToPinForm(project);
+                iNewProject.value = '';
             }
         });
     }
 }, false);
+
+function addProjectToNavbar(project) {
+    const p = document.createElement('a');
+    p.innerHTML = project.name;
+    //...p.href=?
+    projectsBoard.appendChild(p);
+}
+
+function addProjectToPinForm(project) {
+    const p = document.createElement('option');
+    p.innerHTML = project.name;
+    p.value = project.name;
+    //...p.href=?
+    iProject.appendChild(p);
+}
 
 function getProjects() {
     chrome.runtime.sendMessage({
@@ -60,10 +72,10 @@ function getProjects() {
         if (response.message === 'success') {
             projects = response.payload;
             projects.forEach((project) => {
-                const p = document.createElement('a');
-                p.innerHTML = project.name;
-                //...p.href=?
-                projectsBoard.appendChild(p);
+                //Add project to navbar
+                addProjectToNavbar(project);
+                //Add project to form
+                addProjectToPinForm(project);
             });
         }
     });
@@ -190,6 +202,7 @@ const form = document.getElementById('add-pin-form');
 const iFavicon = document.getElementById('i-favicon');
 const iImages = document.getElementById("i-images");
 const iImage = document.getElementById('i-image');
+const iProject = document.getElementById('i-project');
 const iTitle = document.getElementById('i-title');
 const iTags = document.getElementById('i-tags');
 new BulmaTagsInput(iTags);
@@ -257,6 +270,7 @@ function clearPinForm() {
     iTagsInput.removeAll();
     iDescription.value = '';
     iType.value = 'undefined';
+    iProject.value = 'inbox';
     editor.txt.html('');
     autosize.update(document.querySelectorAll('textarea'));
 }
@@ -293,6 +307,10 @@ function populatePinForm(pinInfo) {
         iType.value = pinInfo.type;
     else
         iType.value = 'undefined';
+    if (pinInfo.project && [...iProject.options].map(o => o.value).includes(pinInfo.project))
+        iProject.value = pinInfo.project;
+    else
+        iProject.value = 'inbox';
     if (pinInfo.article)
         editor.txt.html(pinInfo.article);
     setTimeout(function () { autosize.update(document.querySelectorAll('textarea')); }, 500);
@@ -307,6 +325,7 @@ form.addEventListener('submit', function (event) {
             'image': iImage.getAttribute('src'),
             'favicon': iFavicon.getAttribute('src'),
             'images': Array.from(iImages.childNodes, i => i.src),
+            'project': iProject.value,
             'type': iType.value,
             'title': iTitle.value,
             'url': iUrl.value,

@@ -20,7 +20,7 @@
         </div>
         <a>
             <div class="control flex-space">
-                <input class="input is-static" type="text" id="i-project" placeholder="Add project">
+                <input class="input is-static" type="text" id="i-new-project" placeholder="Add project">
                 <img src="./icons/ok.svg" id="add_project" alt="Add Project">
             </div>
         </a>
@@ -72,6 +72,15 @@
             <div class="control flex-space">
                 <input class="input is-static" type="url" id="i-url" placeholder="Enter Url to be fetched..." required>
                 <img src="./icons/ok.svg" id="fetch_url" alt="Fetch Url">
+            </div>
+            <div class="field">
+                <div class="control">
+                    <div class="select">
+                        <select id="i-project" aria-label="Type">
+                            <option value="inbox">Inbox</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="flex-space">
                 <figure class="image is-24x24">
