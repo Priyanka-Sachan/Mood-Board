@@ -144,14 +144,12 @@ const iFavicon = document.getElementById('i-favicon');
 const iImages = document.getElementById("i-images");
 const iImage = document.getElementById('i-image');
 const iTitle = document.getElementById('i-title');
-iTitle.style.width = '100px';
 const iTags = document.getElementById('i-tags');
 new BulmaTagsInput(iTags);
 const iTagsInput = iTags.BulmaTagsInput();
 const iType = document.getElementById('i-type');
 const iUrl = document.getElementById('i-url');
 const iDescription = document.getElementById('i-description');
-iDescription.style.width = '100px';
 const iNote = document.getElementById('i-note');
 
 function openSide() {
@@ -161,7 +159,6 @@ function openSide() {
     closeSidebar.style.display = 'inline';
     window.cqApi.reevaluate(false, function () {
         masonry.layout();
-        //autosize.update(document.querySelectorAll('textarea'));
     });
 }
 
@@ -210,9 +207,8 @@ function clearPinForm() {
     iImages.innerHTML = '';
     iImage.setAttribute('src', '');
     iTitle.value = '';
-    // iTitle.style.width = '100px';
+    iTagsInput.removeAll();
     iDescription.value = '';
-    // iDescription.style.width = '100px';
     iType.value = 'undefined';
     editor.txt.html('');
     autosize.update(document.querySelectorAll('textarea'));
@@ -239,6 +235,11 @@ function populatePinForm(pinInfo) {
         iImage.setAttribute('src', images[0]);
     if (pinInfo.title)
         iTitle.value = pinInfo.title;
+    if (pinInfo.tags) {
+        pinInfo.tags.forEach((tag) => {
+            iTagsInput.add(tag);
+        });
+    }
     if (pinInfo.description)
         iDescription.value = pinInfo.description;
     if (pinInfo.type && [...iType.options].map(o => o.value).includes(pinInfo.type))
@@ -247,7 +248,6 @@ function populatePinForm(pinInfo) {
         iType.value = 'undefined';
     if (pinInfo.article)
         editor.txt.html(pinInfo.article);
-    // autosize.update(document.querySelectorAll('textarea'));
     setTimeout(function () { autosize.update(document.querySelectorAll('textarea')); }, 500);
 }
 
