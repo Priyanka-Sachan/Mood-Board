@@ -27,19 +27,18 @@ closeNavbar.addEventListener(('click'), (e) => {
 // Main
 const board = document.getElementById('board');
 const masonry = new Masonry(board, {
+    columnWidth: '.grid-item',
     itemSelector: '.grid-item'
 });
 let pins, filteredPins;
 
-function createPin(pin) {
+function getPinData(pin) {
     const { id, image, images, favicon, type, title, url, domain, tags, description, note } = pin;
     let tagsList = '';
     tags.forEach((tag) => {
         tagsList = tagsList.concat(`<span class="tag">${tag}</span>`);
     });
-    const card = document.createElement('div');
-    card.classList.add('grid-item', 'column');
-    card.innerHTML = `
+    const pinData = `
     <div class="card" id="${id}">
         ${image ? `<div class="card-image">
             <figure class="image">
@@ -67,6 +66,13 @@ function createPin(pin) {
                 <img src="./icons/edit.svg">
         </figure>
     </div > `;
+    return pinData;
+}
+
+function addPin(pin) {
+    const card = document.createElement('div');
+    card.classList.add('grid-item', 'column');
+    card.innerHTML = getPinData(pin);
     board.appendChild(card);
     masonry.appended(card);
     masonry.layout();
@@ -76,7 +82,7 @@ function filterPins() {
     board.innerHTML = '';
     filteredPins = pins;
     filteredPins.forEach(pin_data => {
-        createPin(pin_data);
+        addPin(pin_data);
     });
     imagesLoaded(board, function () {
         // init Masonry after all images have loaded
@@ -94,9 +100,10 @@ function getPins() {
             document.querySelectorAll('.edit-btn').forEach(item => {
                 item.addEventListener('click', event => {
                     const id = parseInt(event.currentTarget.parentNode.id);
-                    const pin = pins.find((p) => p.id == id);
+                    pinInfo = pins.find((p) => p.id == id);
                     openSide();
-                    populatePinForm(pin);
+                    mode = 1;
+                    populatePinForm(pinInfo);
                 }, false);
             });
         }
@@ -133,6 +140,7 @@ function openSide() {
 }
 
 function closeSide() {
+    mode = 0;
     document.getElementById("sidebar-1").style.width = "0";
     document.getElementById("main").style.marginRight = "0";
     openSidebar.style.display = 'inline';
@@ -150,6 +158,7 @@ closeSidebar.addEventListener(('click'), (e) => {
     closeSide();
 });
 
+let mode = 0; //...mode=0:New & mode=1:Update
 let pinInfo;
 autosize(document.querySelectorAll('textarea'));
 
@@ -160,8 +169,9 @@ async function fetchAsync(url) {
             //...parse the document and populate
             const result = parseDocument(data, url);
             if (result.message == 'success') {
-                // pinInfo = result.info;
-                populatePinForm(result.info);
+                pinInfo = result.info;
+                mode = 0;
+                populatePinForm(pinInfo);
             } else {
                 //...Show a toast message
             }
@@ -229,16 +239,32 @@ form.addEventListener('submit', function (event) {
             'note': iNote.value,
             'article': editor.txt.html()
         };
-        console.log('Pin created:', pin);
-        chrome.runtime.sendMessage({
-            message: 'add_pin',
-            payload: pin
-        }, response => {
-            if (response.message === 'success') {
-                console.log('Pin saved:', pin);
-                createPin(pin);
-            }
-        });
+        if (mode == 0) {
+            console.log('Pin created:', pin);
+            chrome.runtime.sendMessage({
+                message: 'add_pin',
+                payload: pin
+            }, response => {
+                if (response.message === 'success') {
+                    console.log('Pin saved:', pin);
+                    addPin(pin);
+                }
+            });
+        } else {
+            pin.id = pinInfo.id;
+            console.log('Pin updated:', pin);
+            chrome.runtime.sendMessage({
+                message: 'update_pin',
+                payload: pin
+            }, response => {
+                if (response.message === 'success') {
+                    console.log('Pin updated:', pin);
+                    const pinWidget = document.getElementById(String(pin.id));
+                    pinWidget.innerHTML = getPinData(pin);
+                    masonry.layout();
+                }
+            });
+        }
     }
     event.preventDefault();
     event.stopPropagation();

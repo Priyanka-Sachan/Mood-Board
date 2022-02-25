@@ -144,6 +144,7 @@ body {
 
 .grid-item {
     padding: 8px;
+    width: 25%;
 }
 
 .grid-item[data-cq~="max-width:700px"] {

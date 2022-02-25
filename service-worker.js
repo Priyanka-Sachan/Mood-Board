@@ -60,6 +60,27 @@ function addPin(pin) {
     return true;
 }
 
+function updatePin(pin) {
+    chrome.storage.local.get('pins', data => {
+        if (chrome.runtime.lastError) {
+            return false;
+        }
+        pins = data.pins;
+        const index = pins.findIndex((p) => p.id == pin.id);
+        if (index !== -1)
+            pins[index] = pin;
+        chrome.storage.local.set({
+            pins: pins
+        }, () => {
+            if (chrome.runtime.lastError) {
+                return false;
+            }
+            return true;
+        });
+    });
+    return true;
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'get_current_document') {
         const site_to_pin = request.payload;
@@ -67,6 +88,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     } else if (request.message === 'add_pin') {
         if (addPin(request.payload)) {
+            sendResponse({ message: 'success' });
+        } else {
+            sendResponse({ message: 'fail' });
+        }
+    } else if (request.message === 'update_pin') {
+        if (updatePin(request.payload)) {
             sendResponse({ message: 'success' });
         } else {
             sendResponse({ message: 'fail' });
