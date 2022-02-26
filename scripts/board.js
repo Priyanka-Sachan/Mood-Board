@@ -53,7 +53,10 @@ addProject.addEventListener('click', (e) => {
 function addProjectToNavbar(project) {
     const p = document.createElement('a');
     p.innerHTML = project.name;
-    //...p.href=?
+    p.addEventListener('click', (e) => {
+        filter.project = project.name;
+        filterPins();
+    }, false);
     projectsBoard.appendChild(p);
 }
 
@@ -61,7 +64,6 @@ function addProjectToPinForm(project) {
     const p = document.createElement('option');
     p.innerHTML = project.name;
     p.value = project.name;
-    //...p.href=?
     iProject.appendChild(p);
 }
 
@@ -90,6 +92,7 @@ const masonry = new Masonry(board, {
     itemSelector: '.grid-item'
 });
 let pins, filteredPins;
+let filter = { 'project': '' };
 
 function getPinData(pin) {
     const { id, image, images, favicon, type, title, url, domain, tags, description, note } = pin;
@@ -142,7 +145,11 @@ function addPin(pin) {
 
 function filterPins() {
     board.innerHTML = '';
-    filteredPins = pins;
+    filteredPins = pins.filter((p) => {
+        if (filter.project)
+            return p.project == filter.project;
+        return true;
+    });
     filteredPins.forEach(pin_data => {
         addPin(pin_data);
     });

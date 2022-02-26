@@ -2,6 +2,7 @@ const form = document.getElementById('add-pin-form');
 const iFavicon = document.getElementById('i-favicon');
 const iImage = document.getElementById('i-image');
 const iImages = document.getElementById('i-images');
+const iProject = document.getElementById('i-project');
 const iTitle = document.getElementById('i-title');
 const iTags = document.getElementById('i-tags');
 new BulmaTagsInput(iTags);
@@ -62,6 +63,7 @@ form.addEventListener('submit', function(event) {
             'id': Date.now(),
             'image': iImage.getAttribute('src'),
             'images': Array.from(iImages.children, i => i.src),
+            'project': iProject.value,
             'favicon': iFavicon.getAttribute('src'),
             'type': iType.value,
             'title': iTitle.value,
@@ -87,6 +89,27 @@ form.addEventListener('submit', function(event) {
     event.stopPropagation();
 }, false);
 
+function addProjectToPinForm(project) {
+    const p = document.createElement('option');
+    p.innerHTML = project.name;
+    p.value = project.name;
+    iProject.appendChild(p);
+}
+
+function getProjects() {
+    chrome.runtime.sendMessage({
+        message: 'get_projects'
+    }, response => {
+        if (response.message === 'success') {
+            projects = response.payload;
+            projects.forEach((project) => {
+                //Add project to form
+                addProjectToPinForm(project);
+            });
+        }
+    });
+}
+getProjects();
 chrome.windows.getCurrent({ populate: true }, window => {
     const site_to_pin = window.tabs.filter(tab => tab.active);
     iUrl.value = site_to_pin[0].url;
