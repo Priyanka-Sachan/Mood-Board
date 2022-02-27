@@ -148,6 +148,11 @@ body {
     justify-content: space-between;
 }
 
+#all-tags {
+    padding: 8px;
+    margin-bottom: 0;
+}
+
 .grid-item {
     padding: 8px;
     width: 25%;
@@ -191,7 +196,7 @@ body {
     right: 48px;
 }
 
-.tags {
+.card .tags {
     margin-top: -1.25em;
 }
 

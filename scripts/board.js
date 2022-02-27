@@ -55,7 +55,9 @@ function addProjectToNavbar(project) {
     p.innerHTML = project.name;
     p.addEventListener('click', (e) => {
         filter.project = project.name;
+        filter.tag = '';
         filterPins();
+        updateAllTags();
     }, false);
     projectsBoard.appendChild(p);
 }
@@ -86,13 +88,14 @@ function getProjects() {
 getProjects();
 
 // Main
+const allTags = document.getElementById('all-tags');
 const board = document.getElementById('board');
 const masonry = new Masonry(board, {
     columnWidth: '.grid-item',
     itemSelector: '.grid-item'
 });
 let pins, filteredPins;
-let filter = { 'project': '' };
+let filter = { 'project': '', 'tag': '' };
 
 function getPinData(pin) {
     const { id, image, images, favicon, type, title, url, domain, tags, description, note } = pin;
@@ -143,11 +146,36 @@ function addPin(pin) {
     masonry.layout();
 }
 
+function updateAllTags() {
+    allTags.innerHTML = '';
+    let allUniqueTags = [];
+    filteredPins.forEach((pin) => {
+        pin.tags.forEach((tag) => {
+            allUniqueTags.push(tag);
+        });
+    });
+    allUniqueTags = new Set([...allUniqueTags]);
+    allUniqueTags.forEach((tag) => {
+        const tagWidget = document.createElement('span');
+        tagWidget.classList.add('tag');
+        tagWidget.innerHTML = tag;
+        tagWidget.addEventListener('click', (e) => {
+            filter.tag = tag;
+            filterPins();
+        }, false);
+        allTags.appendChild(tagWidget);
+    });
+}
+
 function filterPins() {
     board.innerHTML = '';
     filteredPins = pins.filter((p) => {
-        if (filter.project)
+        if (filter.project) {
+            if (filter.tag) {
+                return (p.project == filter.project && p.tags.includes(filter.tag));
+            }
             return p.project == filter.project;
+        }
         return true;
     });
     filteredPins.forEach(pin_data => {
@@ -156,6 +184,35 @@ function filterPins() {
     imagesLoaded(board, function () {
         // init Masonry after all images have loaded
         masonry.layout();
+    });
+    document.querySelectorAll('.edit-btn').forEach(item => {
+        item.addEventListener('click', event => {
+            const id = parseInt(event.currentTarget.parentNode.id);
+            pinInfo = pins.find((p) => p.id == id);
+            if (pinInfo) {
+                mode = 1;
+                populatePinForm(pinInfo);
+                openSide();
+            } else {
+                //...Toast cannot open bookmark
+            }
+        }, false);
+    });
+    document.querySelectorAll('.delete-btn').forEach(item => {
+        item.addEventListener('click', event => {
+            const id = parseInt(event.currentTarget.parentNode.id);
+            const target = event.currentTarget.parentNode.parentNode;
+            chrome.runtime.sendMessage({
+                message: 'delete_pin',
+                payload: id
+            }, response => {
+                if (response.message === 'success') {
+                    console.log('Pin deleted:', id);
+                    target.remove();
+                    masonry.layout();
+                }
+            });
+        }, false);
     });
 }
 
@@ -166,35 +223,6 @@ function getPins() {
         if (response.message === 'success') {
             pins = response.payload;
             filterPins();
-            document.querySelectorAll('.edit-btn').forEach(item => {
-                item.addEventListener('click', event => {
-                    const id = parseInt(event.currentTarget.parentNode.id);
-                    pinInfo = pins.find((p) => p.id == id);
-                    if (pinInfo) {
-                        mode = 1;
-                        populatePinForm(pinInfo);
-                        openSide();
-                    } else {
-                        //...Toast cannot open bookmark
-                    }
-                }, false);
-            });
-            document.querySelectorAll('.delete-btn').forEach(item => {
-                item.addEventListener('click', event => {
-                    const id = parseInt(event.currentTarget.parentNode.id);
-                    const target = event.currentTarget.parentNode.parentNode;
-                    chrome.runtime.sendMessage({
-                        message: 'delete_pin',
-                        payload: id
-                    }, response => {
-                        if (response.message === 'success') {
-                            console.log('Pin deleted:', id);
-                            target.remove();
-                            masonry.layout();
-                        }
-                    });
-                }, false);
-            });
         }
     });
 }
