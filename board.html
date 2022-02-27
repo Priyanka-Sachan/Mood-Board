@@ -14,40 +14,40 @@
 <body>
     <!-- Navbar -->
     <div id="navbar">
-        <img class="image is-24x24" id="close_navbar" src="./icons/close.svg" alt="Close Navbar">
-        <div id="projects-board">
+        <img class="image is-24x24" id="navbar-close-icon" src="./icons/close.svg" alt="Close Navbar">
+        <div id="navbar-projects">
             <a>Inbox</a>
         </div>
         <a>
             <div class="control flex-space">
-                <input class="input is-static" type="text" id="i-new-project" placeholder="Add project">
-                <img src="./icons/ok.svg" id="add_project" alt="Add Project">
+                <input class="input is-static" type="text" id="navbar-add-project" placeholder="Add project">
+                <img src="./icons/ok.svg" id="navbar-add-project-icon" alt="Add Project">
             </div>
         </a>
     </div>
     <!-- Main space -->
     <div id="main">
         <div class="flex-space">
-            <img class="image is-24x24" id="open_navbar" src="./icons/bars.svg" alt="Open Navbar">
+            <img class="image is-24x24" id="navbar-open-icon" src="./icons/bars.svg" alt="Open Navbar">
             <input class="input" type="text" placeholder="Search">
-            <img class="image is-24x24" id="open_sidebar" src="./icons/move-left.svg" alt="Open Sidenar">
-            <img class="image is-24x24" id="close_sidebar" src="./icons/move-right.svg" alt="Close Sidenar">
+            <img class="image is-24x24" id="sidebar-1-open-icon" src="./icons/move-left.svg" alt="Open Sidebar">
+            <img class="image is-24x24" id="sidebar-1-close-icon" src="./icons/move-right.svg" alt="Close Sidebar">
         </div>
         <div id="project">
-            <div id="all-tags" class="tags"></div>
-            <div id="board" class="columns">
+            <div id="project-tags" class="tags"></div>
+            <div id="project-board" class="columns">
             </div>
         </div>
     </div>
     <!-- Details sidebar -->
     <div id="sidebar-1">
         <div class="flex-space">
-            <img class="image is-24x24" id="min_sidebar" src="./icons/minimize.svg" alt="Minimize Sidenar">
-            <img class="image is-24x24" id="max_sidebar" src="./icons/maximize.svg" alt="Maximize Sidenar">
+            <img class="image is-24x24" id="sidebar-2-min" src="./icons/minimize.svg" alt="Minimize Sidebar">
+            <img class="image is-24x24" id="sidebar-2-max" src="./icons/maximize.svg" alt="Maximize Sidebar">
             <div class="field">
                 <div class="control">
                     <div class="select">
-                        <select id="i-type" aria-label="Type">
+                        <select id="pin-form-type" aria-label="Type">
                             <option value="undefined">Undefined</option>
                             <option value="website">Website</option>
                             <option value="article">Article</option>
@@ -59,24 +59,22 @@
                 </div>
             </div>
         </div>
-        <form id="add-pin-form">
-            <div id="wrapper">
-                <div id="carousel">
-                    <div id="i-images">
-                    </div>
+        <form id="pin-form">
+            <div id="pin-form-carousel">
+                <div id="pin-form-images">
                 </div>
             </div>
             <figure class="image">
-                <img id="i-image">
+                <img id="pin-form-image">
             </figure>
             <div class="control flex-space">
-                <input class="input is-static" type="url" id="i-url" placeholder="Enter Url to be fetched..." required>
-                <img src="./icons/ok.svg" id="fetch_url" alt="Fetch Url">
+                <input class="input is-static" type="url" id="pin-form-url" placeholder="Enter Url to be fetched..." required>
+                <img src="./icons/ok.svg" id="pin-form-url-icon" alt="Fetch Url">
             </div>
             <div class="field">
                 <div class="control">
                     <div class="select">
-                        <select id="i-project" aria-label="Type">
+                        <select id="pin-form-project" aria-label="Type">
                             <option value="inbox">Inbox</option>
                         </select>
                     </div>
@@ -84,36 +82,36 @@
             </div>
             <div class="flex-space">
                 <figure class="image is-24x24">
-                    <img id="i-favicon" src="./icons/web.svg">
+                    <img id="pin-form-favicon" src="./icons/web.svg">
                 </figure>
                 <div class="field" style="flex: 1;">
                     <div class="control">
-                        <textarea class="textarea is-large" type="text" id="i-title" rows="1" placeholder="Title..." aria-describedby="title"></textarea>
+                        <textarea class="textarea is-large" type="text" id="pin-form-title" rows="1" placeholder="Title..." aria-describedby="title"></textarea>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <input class="input is-static" id="i-tags" type="text" data-type="tags" placeholder="Choose Tags">
+                    <input class="input is-static" id="pin-form-tags" type="text" data-type="tags" placeholder="Choose Tags">
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <textarea class="textarea" id="i-description" rows="1" placeholder="Description"></textarea>
+                    <textarea class="textarea" id="pin-form-description" rows="1" placeholder="Description"></textarea>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <textarea class="textarea" id="i-note" rows="1" placeholder="Your notes"></textarea>
+                    <textarea class="textarea" id="pin-form-note" rows="1" placeholder="Your notes"></textarea>
                 </div>
             </div>
-            <button id="add_pin" type="submit" class="button">Submit</button>
+            <button id="add-pin-icon" type="submit" class="button">Submit</button>
         </form>
     </div>
     <!-- Article Sidebar -->
     <div id="sidebar-2">
-        <button class="button" id="edit_article">EDIT</button>
-        <button class="button" id="preview_article">PREVIEW</button>
+        <button class="button" id="sidebar-edit-icon">EDIT</button>
+        <button class="button" id="sidebar-preview-icon">PREVIEW</button>
         <div id="editor">
             <p>Write your article or notes or thoughts or anything that can be converted to binary😀 </p>
         </div>
@@ -127,6 +125,7 @@
     <script src="packages/wangEditor.min.js"></script>
     <script src="packages/Readability.js"></script>
     <script src="scripts/parseDocument.js"></script>
+    <script src="scripts/boardInit.js"></script>
     <script src="scripts/board.js"></script>
 
 </body>

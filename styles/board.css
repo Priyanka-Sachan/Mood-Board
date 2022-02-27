@@ -15,6 +15,17 @@ body {
     transition: 0.5s;
 }
 
+#navbar-open-icon {
+    cursor: pointer;
+}
+
+#navbar-close-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
 #navbar a {
     padding: 4px 8px 4px 32px;
     text-decoration: none;
@@ -22,17 +33,6 @@ body {
     color: #333;
     display: block;
     transition: 0.3s;
-}
-
-#open_navbar {
-    cursor: pointer;
-}
-
-#close_navbar {
-    cursor: pointer;
-    position: absolute;
-    top: 16px;
-    right: 16px;
 }
 
 #sidebar-1 {
@@ -49,26 +49,32 @@ body {
     background-color: white;
 }
 
-#wrapper {
+#sidebar-1-open-icon {
+    cursor: pointer;
+}
+
+#sidebar-1-close-icon {
+    display: none;
+    cursor: pointer;
+}
+
+#pin-form-carousel {
     width: 100%;
     position: relative;
     margin: 0;
     display: flex;
     justify-content: center;
     flex-direction: column;
-}
-
-#carousel {
     overflow: auto;
     scroll-behavior: smooth;
     scrollbar-width: none;
 }
 
-#carousel::-webkit-scrollbar {
+#pin-form-carousel::-webkit-scrollbar {
     height: 0;
 }
 
-#i-images {
+#pin-form-images {
     display: flex;
     grid-gap: 8px;
     grid-auto-flow: column;
@@ -105,15 +111,6 @@ body {
     margin: 0;
 }
 
-#open_sidebar {
-    cursor: pointer;
-}
-
-#close_sidebar {
-    display: none;
-    cursor: pointer;
-}
-
 #sidebar-2 {
     height: 100%;
     width: 0;
@@ -128,11 +125,11 @@ body {
     background-color: white;
 }
 
-#max_sidebar {
+#sidebar-2-max {
     cursor: pointer;
 }
 
-#min_sidebar {
+#sidebar-2-min {
     display: none;
     cursor: pointer;
 }
@@ -148,7 +145,7 @@ body {
     justify-content: space-between;
 }
 
-#all-tags {
+#project-tags {
     padding: 8px;
     margin-bottom: 0;
 }
@@ -182,21 +179,21 @@ body {
     margin: 0;
 }
 
-.edit-btn {
+.pin-edit-icon {
     cursor: pointer;
     position: absolute;
     top: 16px;
     right: 16px;
 }
 
-.delete-btn {
+.pin-delete-icon {
     cursor: pointer;
     position: absolute;
     top: 16px;
     right: 48px;
 }
 
-.card .tags {
+.pin .pin-tags {
     margin-top: -1.25em;
 }
 

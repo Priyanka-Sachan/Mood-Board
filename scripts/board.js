@@ -1,35 +1,27 @@
-// Navbar
-const openNavbar = document.getElementById('open_navbar');
-const closeNavbar = document.getElementById('close_navbar');
-const iNewProject = document.getElementById('i-new-project');
-const addProject = document.getElementById('add_project');
-const projectsBoard = document.getElementById('projects-board');
-let projects;
-
 function openNav() {
-    document.getElementById("navbar").style.width = "200px";
-    document.getElementById("main").style.marginLeft = "200px";
+    navbar.style.width = "200px";
+    main.style.marginLeft = "200px";
 }
 
 function closeNav() {
-    document.getElementById("navbar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
+    navbar.style.width = "0";
+    main.style.marginLeft = "0";
 }
 
-openNavbar.addEventListener(('click'), (e) => {
+navbarOpenIcon.addEventListener(('click'), (e) => {
     openNav();
-    openNavbar.style.display = 'none';
+    navbarOpenIcon.style.display = 'none';
     setTimeout(function() { masonry.layout(); }, 500);
 });
 
-closeNavbar.addEventListener(('click'), (e) => {
+navbarCloseIcon.addEventListener(('click'), (e) => {
     closeNav();
-    openNavbar.style.display = 'inline';
+    navbarOpenIcon.style.display = 'inline';
     setTimeout(function() { masonry.layout(); }, 500);
 });
 
-addProject.addEventListener('click', (e) => {
-    const name = iNewProject.value;
+navbarAddProjectIcon.addEventListener('click', (e) => {
+    const name = navbarAddProject.value;
     if (name) {
         const project = {
             'id': Date.now(),
@@ -44,7 +36,7 @@ addProject.addEventListener('click', (e) => {
                 console.log('Project added', project);
                 addProjectToNavbar(project);
                 addProjectToPinForm(project);
-                iNewProject.value = '';
+                navbarAddProject.value = '';
             }
         });
     }
@@ -59,14 +51,14 @@ function addProjectToNavbar(project) {
         filterPins();
         updateAllTags();
     }, false);
-    projectsBoard.appendChild(p);
+    navbarProjects.appendChild(p);
 }
 
 function addProjectToPinForm(project) {
     const p = document.createElement('option');
     p.innerHTML = project.name;
     p.value = project.name;
-    iProject.appendChild(p);
+    pinFormProject.appendChild(p);
 }
 
 function getProjects() {
@@ -78,7 +70,7 @@ function getProjects() {
             projects.forEach((project) => {
                 //Add project to navbar
                 addProjectToNavbar(project);
-                //Add project to form
+                //Add project to pinForm
                 addProjectToPinForm(project);
             });
         }
@@ -87,16 +79,6 @@ function getProjects() {
 
 getProjects();
 
-// Main
-const allTags = document.getElementById('all-tags');
-const board = document.getElementById('board');
-const masonry = new Masonry(board, {
-    columnWidth: '.grid-item',
-    itemSelector: '.grid-item'
-});
-let pins, filteredPins;
-let filter = { 'project': '', 'tag': '' };
-
 function getPinData(pin) {
     const { id, image, images, favicon, type, title, url, domain, tags, description, note } = pin;
     let tagsList = '';
@@ -104,33 +86,33 @@ function getPinData(pin) {
         tagsList = tagsList.concat(`<span class="tag">${tag}</span>`);
     });
     const pinData = `
-    <div class="card" id="${id}">
+    <div class="card pin" id="${id}">
         ${image ? `<div class="card-image">
             <figure class="image">
-                <img src="${image}">
+                <img class="pin-image" src="${image}">
             </figure>
         </div>`: ''}
         <div class="card-content">
             <div class="media">
                 ${image ? '' : `<div class="media-left">
                     <figure class="image is-48x48">
-                        <img src="${favicon}">
+                        <img class="card-favicon" src="${favicon}">
                     </figure>
                 </div>`}
                 <div class="media-content">
-                <p class="subtitle is-6">${domain}</p>
-                <p class="title is-4">${title}</p>
-                <div class="tags">
+                <p class="subtitle is-6 pin-domain">${domain}</p>
+                <p class="title is-4 pin-title">${title}</p>
+                <div class="tags pin-tags">
                     ${tagsList}
                 </div>
             </div>
         </div>
-        <div class="content">${description}</div>
+        <div class="content pin-description">${description}</div>
         </div >
-        <figure class="image is-24x24 edit-btn">
+        <figure class="image is-24x24 pin-edit-icon">
                 <img src="./icons/edit.svg">
         </figure>
-        <figure class="image is-24x24 delete-btn">
+        <figure class="image is-24x24 pin-delete-icon">
                 <img src="./icons/delete.svg">
         </figure>
     </div > `;
@@ -141,13 +123,13 @@ function addPin(pin) {
     const card = document.createElement('div');
     card.classList.add('grid-item', 'column');
     card.innerHTML = getPinData(pin);
-    board.appendChild(card);
+    projectBoard.appendChild(card);
     masonry.appended(card);
     masonry.layout();
 }
 
 function updateAllTags() {
-    allTags.innerHTML = '';
+    projectTags.innerHTML = '';
     let allUniqueTags = [];
     filteredPins.forEach((pin) => {
         pin.tags.forEach((tag) => {
@@ -163,12 +145,12 @@ function updateAllTags() {
             filter.tag = tag;
             filterPins();
         }, false);
-        allTags.appendChild(tagWidget);
+        projectTags.appendChild(tagWidget);
     });
 }
 
 function filterPins() {
-    board.innerHTML = '';
+    projectBoard.innerHTML = '';
     filteredPins = pins.filter((p) => {
         if (filter.project) {
             if (filter.tag) {
@@ -181,11 +163,11 @@ function filterPins() {
     filteredPins.forEach(pin_data => {
         addPin(pin_data);
     });
-    imagesLoaded(board, function () {
+    imagesLoaded(projectBoard, function () {
         // init Masonry after all images have loaded
         masonry.layout();
     });
-    document.querySelectorAll('.edit-btn').forEach(item => {
+    document.querySelectorAll('.pin-edit-icon').forEach(item => {
         item.addEventListener('click', event => {
             const id = parseInt(event.currentTarget.parentNode.id);
             pinInfo = pins.find((p) => p.id == id);
@@ -198,7 +180,7 @@ function filterPins() {
             }
         }, false);
     });
-    document.querySelectorAll('.delete-btn').forEach(item => {
+    document.querySelectorAll('.pin-delete-icon').forEach(item => {
         item.addEventListener('click', event => {
             const id = parseInt(event.currentTarget.parentNode.id);
             const target = event.currentTarget.parentNode.parentNode;
@@ -229,29 +211,11 @@ function getPins() {
 
 getPins();
 
-// Details Sidebar
-const openSidebar = document.getElementById('open_sidebar');
-const closeSidebar = document.getElementById('close_sidebar');
-const fetchUrl = document.getElementById('fetch_url');
-const form = document.getElementById('add-pin-form');
-const iFavicon = document.getElementById('i-favicon');
-const iImages = document.getElementById("i-images");
-const iImage = document.getElementById('i-image');
-const iProject = document.getElementById('i-project');
-const iTitle = document.getElementById('i-title');
-const iTags = document.getElementById('i-tags');
-new BulmaTagsInput(iTags);
-const iTagsInput = iTags.BulmaTagsInput();
-const iType = document.getElementById('i-type');
-const iUrl = document.getElementById('i-url');
-const iDescription = document.getElementById('i-description');
-const iNote = document.getElementById('i-note');
-
 function openSide() {
-    document.getElementById("sidebar-1").style.width = "40%";
-    document.getElementById("main").style.marginRight = "40%";
-    openSidebar.style.display = 'none';
-    closeSidebar.style.display = 'inline';
+    sidebar1.style.width = "40%";
+    main.style.marginRight = "40%";
+    sidebar1OpenIcon.style.display = 'none';
+    sidebar1CloseIcon.style.display = 'inline';
     window.cqApi.reevaluate(false, function () {
         masonry.layout();
     });
@@ -259,27 +223,23 @@ function openSide() {
 
 function closeSide() {
     mode = 0;
-    document.getElementById("sidebar-1").style.width = "0";
-    document.getElementById("main").style.marginRight = "0";
-    openSidebar.style.display = 'inline';
-    closeSidebar.style.display = 'none';
+    sidebar1.style.width = "0";
+    main.style.marginRight = "0";
+    sidebar1OpenIcon.style.display = 'inline';
+    sidebar1CloseIcon.style.display = 'none';
     window.cqApi.reevaluate(false, function () {
         masonry.layout();
     });
     clearPinForm();
 }
 
-openSidebar.addEventListener(('click'), (e) => {
+sidebar1OpenIcon.addEventListener(('click'), (e) => {
     openSide();
 });
 
-closeSidebar.addEventListener(('click'), (e) => {
+sidebar1CloseIcon.addEventListener(('click'), (e) => {
     closeSide();
 });
-
-let mode = 0; //...mode=0:New & mode=1:Update
-let pinInfo;
-autosize(document.querySelectorAll('textarea'));
 
 async function fetchAsync(url) {
     await fetch(url)
@@ -297,15 +257,15 @@ async function fetchAsync(url) {
         });
 }
 function clearPinForm() {
-    iUrl.value = '';
-    iFavicon.setAttribute('src', './icons/web.svg');
-    iImages.innerHTML = '';
-    iImage.setAttribute('src', '');
-    iTitle.value = '';
-    iTagsInput.removeAll();
-    iDescription.value = '';
-    iType.value = 'undefined';
-    iProject.value = 'inbox';
+    pinFormUrl.value = '';
+    pinFormFavicon.setAttribute('src', './icons/web.svg');
+    pinFormImages.innerHTML = '';
+    pinFormImage.setAttribute('src', '');
+    pinFormTitle.value = '';
+    pinFormTagsInput.removeAll();
+    pinFormDescription.value = '';
+    pinFormType.value = 'undefined';
+    pinFormProject.value = 'inbox';
     editor.txt.html('');
     autosize.update(document.querySelectorAll('textarea'));
 }
@@ -314,60 +274,60 @@ function populatePinForm(pinInfo) {
     console.log(pinInfo);
     clearPinForm();
     if (pinInfo.url)
-        iUrl.value = pinInfo.url;
+        pinFormUrl.value = pinInfo.url;
     if (pinInfo.favicon)
-        iFavicon.setAttribute('src', pinInfo.favicon);
+        pinFormFavicon.setAttribute('src', pinInfo.favicon);
     const images = pinInfo.images;
     images.forEach((i) => {
         const img = document.createElement('img');
         img.src = i;
         img.classList.add('item');
-        iImages.appendChild(img);
+        pinFormImages.appendChild(img);
     });
     // console.log(pinInfo.image);
     if (pinInfo.image)
-        iImage.setAttribute('src', pinInfo.image);
+        pinFormImage.setAttribute('src', pinInfo.image);
     else if (images[0])
-        iImage.setAttribute('src', images[0]);
+        pinFormImage.setAttribute('src', images[0]);
     if (pinInfo.title)
-        iTitle.value = pinInfo.title;
+        pinFormTitle.value = pinInfo.title;
     if (pinInfo.tags) {
         pinInfo.tags.forEach((tag) => {
-            iTagsInput.add(tag);
+            pinFormTagsInput.add(tag);
         });
     }
     if (pinInfo.description)
-        iDescription.value = pinInfo.description;
-    if (pinInfo.type && [...iType.options].map(o => o.value).includes(pinInfo.type))
-        iType.value = pinInfo.type;
+        pinFormDescription.value = pinInfo.description;
+    if (pinInfo.type && [...pinFormType.options].map(o => o.value).includes(pinInfo.type))
+        pinFormType.value = pinInfo.type;
     else
-        iType.value = 'undefined';
-    if (pinInfo.project && [...iProject.options].map(o => o.value).includes(pinInfo.project))
-        iProject.value = pinInfo.project;
+        pinFormType.value = 'undefined';
+    if (pinInfo.project && [...pinFormProject.options].map(o => o.value).includes(pinInfo.project))
+        pinFormProject.value = pinInfo.project;
     else
-        iProject.value = 'inbox';
+        pinFormProject.value = 'inbox';
     if (pinInfo.article)
         editor.txt.html(pinInfo.article);
     setTimeout(function () { autosize.update(document.querySelectorAll('textarea')); }, 500);
 }
 
-form.addEventListener('submit', function (event) {
-    let isValid = form.checkValidity();
-    form.classList.add('was-validated');
+pinForm.addEventListener('submit', function (event) {
+    let isValid = pinForm.checkValidity();
+    pinForm.classList.add('was-validated');
     if (isValid === true) {
         const pin = {
             'id': Date.now(),
-            'image': iImage.getAttribute('src'),
-            'favicon': iFavicon.getAttribute('src'),
-            'images': Array.from(iImages.childNodes, i => i.src),
-            'project': iProject.value,
-            'type': iType.value,
-            'title': iTitle.value,
-            'url': iUrl.value,
-            'domain': (new URL(iUrl.value)).hostname.replace('www.', ''),
-            'tags': iTagsInput.items,
-            'description': iDescription.value,
-            'note': iNote.value,
+            'image': pinFormImage.getAttribute('src'),
+            'favicon': pinFormFavicon.getAttribute('src'),
+            'images': Array.from(pinFormImages.childNodes, i => i.src),
+            'project': pinFormProject.value,
+            'type': pinFormType.value,
+            'title': pinFormTitle.value,
+            'url': pinFormUrl.value,
+            'domain': (new URL(pinFormUrl.value)).hostname.replace('www.', ''),
+            'tags': pinFormTagsInput.items,
+            'description': pinFormDescription.value,
+            'note': pinFormNote.value,
             'article': editor.txt.html()
         };
         if (mode == 0) {
@@ -392,6 +352,7 @@ form.addEventListener('submit', function (event) {
                     console.log('Pin updated:', pin);
                     const pinWidget = document.getElementById(String(pin.id));
                     pinWidget.innerHTML = getPinData(pin);
+                    updateAllTags();
                     masonry.layout();
                 }
             });
@@ -401,51 +362,46 @@ form.addEventListener('submit', function (event) {
     event.stopPropagation();
 }, false);
 
-fetchUrl.addEventListener('click', (e) => {
-    fetchAsync(iUrl.value);
+pinFormUrlIcon.addEventListener('click', (e) => {
+    fetchAsync(pinFormUrl.value);
 });
 
-// Article Sidebar
-const minSidebar = document.getElementById('min_sidebar');
-const maxSidebar = document.getElementById('max_sidebar');
-const editArticle = document.getElementById('edit_article');
-const previewArticle = document.getElementById('preview_article');
 
 function maxSide() {
-    document.getElementById("sidebar-1").style.width = "40%";
-    document.getElementById("sidebar-1").style.marginRight = "60%";
-    document.getElementById("sidebar-1").style.paddingLeft = "16px";
-    document.getElementById("sidebar-1").style.paddingRight = "16px";
-    document.getElementById("sidebar-2").style.width = "60%";
-    document.getElementById("sidebar-2").style.paddingLeft = "16px";
-    document.getElementById("sidebar-2").style.paddingRight = "16px";
-    document.getElementById("main").style.display = "none";
-    document.getElementById("main").style.marginRight = "100%";
+    sidebar1.style.width = "40%";
+    sidebar1.style.marginRight = "60%";
+    sidebar1.style.paddingLeft = "16px";
+    sidebar1.style.paddingRight = "16px";
+    sidebar2.style.width = "60%";
+    sidebar2.style.paddingLeft = "16px";
+    sidebar2.style.paddingRight = "16px";
+    main.style.display = "none";
+    main.style.marginRight = "100%";
 }
 
 function minSide() {
-    document.getElementById("sidebar-1").style.width = "40%";
-    document.getElementById("sidebar-1").style.marginRight = "0";
-    document.getElementById("sidebar-1").style.paddingLeft = "0";
-    document.getElementById("sidebar-1").style.paddingRight = "0";
-    document.getElementById("sidebar-2").style.width = "0";
-    document.getElementById("sidebar-2").style.paddingLeft = "0";
-    document.getElementById("sidebar-2").style.paddingRight = "0";
-    document.getElementById("main").style.display = "block";
-    document.getElementById("main").style.marginRight = "40%";
+    sidebar1.style.width = "40%";
+    sidebar1.style.marginRight = "0";
+    sidebar1.style.paddingLeft = "0";
+    sidebar1.style.paddingRight = "0";
+    sidebar2.style.width = "0";
+    sidebar2.style.paddingLeft = "0";
+    sidebar2.style.paddingRight = "0";
+    main.style.display = "block";
+    main.style.marginRight = "40%";
 }
 
-maxSidebar.addEventListener(('click'), (e) => {
+sidebar2Max.addEventListener(('click'), (e) => {
     maxSide();
-    maxSidebar.style.display = 'none';
-    minSidebar.style.display = 'inline';
+    sidebar2Max.style.display = 'none';
+    sidebar2Min.style.display = 'inline';
     setTimeout(function () { masonry.layout(); }, 500);
 });
 
-minSidebar.addEventListener(('click'), (e) => {
+sidebar2Min.addEventListener(('click'), (e) => {
     minSide();
-    maxSidebar.style.display = 'inline';
-    minSidebar.style.display = 'none';
+    sidebar2Max.style.display = 'inline';
+    sidebar2Min.style.display = 'none';
     setTimeout(function () { masonry.layout(); }, 500);
 });
 
@@ -467,10 +423,10 @@ editor.config.lang = 'en';
 editor.i18next = window.i18next;
 editor.create();
 
-editArticle.addEventListener('click', () => {
+sidebarEditIcon.addEventListener('click', () => {
     editor.enable();
 });
 
-previewArticle.addEventListener('click', () => {
+sidebarPreviewIcon.addEventListener('click', () => {
     editor.disable();
 });
