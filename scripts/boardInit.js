@@ -1,8 +1,9 @@
-let projects;
-let pins, filteredPins;
+let projects, currentProject;
+let pins = [],
+    filteredPins = [],
+    currentPin;
 let filter = { 'project': '', 'tag': '' };
 let mode = 0; //...mode=0:New & mode=1:Update
-let pinInfo;
 
 // Navbar
 const navbar = document.getElementById('navbar');
@@ -47,3 +48,20 @@ const sidebar2Min = document.getElementById('sidebar-2-min');
 const sidebar2Max = document.getElementById('sidebar-2-max');
 const sidebarEditIcon = document.getElementById('sidebar-edit-icon');
 const sidebarPreviewIcon = document.getElementById('sidebar-preview-icon');
+const E = window.wangEditor;
+const editor = new E('#editor');
+editor.config.height = window.innerHeight - 100;
+editor.config.fontNames = [
+    'Arial',
+    'Tahoma',
+    'Verdana',
+    'Times New Roman',
+    'Courier New',
+];
+editor.config.excludeMenus = [
+    'redo',
+    'undo'
+]
+editor.config.lang = 'en';
+editor.i18next = window.i18next;
+editor.create();
