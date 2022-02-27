@@ -14,7 +14,6 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
 }
 
@@ -37,9 +36,12 @@ body {
 }
 
 .item {
-    height: 128px;
+    height: 64px;
+    width: 64px;
     background: transparent;
-    margin: 4px;
+    margin: 2px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 .flex-space {
@@ -55,13 +57,17 @@ body {
     box-shadow: none;
 }
 
-.textarea,
-.is-hovered.textarea,
-.is-focused.textarea,
-.is-active.textarea {
-    border: none;
-    overflow: auto;
+#add-pin-form textarea {
+    border-style: none;
+    border-color: transparent;
+    /* overflow: auto; */
     box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.tags-input .input {
+    margin: 0;
 }
 
 ::-webkit-scrollbar {
