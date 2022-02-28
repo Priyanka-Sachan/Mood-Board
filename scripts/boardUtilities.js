@@ -231,7 +231,7 @@ function clearPinForm() {
     pinFormTagsInput.removeAll();
     pinFormDescription.value = '';
     pinFormType.value = 'undefined';
-    pinFormProject.value = 'inbox';
+    pinFormProject.value = '0';
     editor.txt.html('');
     autosize.update(document.querySelectorAll('textarea'));
 }
