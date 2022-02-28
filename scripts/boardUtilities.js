@@ -131,10 +131,12 @@ function addPinToBoard(pin) {
                 pins = pins.filter((p) => p.id != pin.id);
                 const pinWidget = document.querySelector(`#project-board [id='${pin.id}']`).parentElement;
                 pinWidget.remove();
+                updateProjectTags();
                 masonry.layout();
             }
         });
     }, false);
+    updateProjectTags();
     masonry.appended(card);
     masonry.layout();
 }
@@ -167,12 +169,22 @@ function updatePinInBoard(pin) {
             }
         });
     }, false);
+    updateProjectTags();
     masonry.layout();
 }
 
 function updateProjectTags() {
     projectTags.innerHTML = '';
     let uniqueTags = [];
+    filteredPins = pins.filter((p) => {
+        if (filter.project) {
+            if (filter.tag) {
+                return (p.project == filter.project && p.tags.includes(filter.tag));
+            }
+            return p.project == filter.project;
+        }
+        return true;
+    });
     filteredPins.forEach((pin) => {
         pin.tags.forEach((tag) => {
             uniqueTags.push(tag);

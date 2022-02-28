@@ -57,20 +57,24 @@ hr {
     justify-content: space-between;
 }
 
+.flex-space .textarea {
+    min-width: fit-content;
+}
+
 #project-board {
     margin: auto;
 }
 
 #project-detail {
     display: none;
+    padding: 8px;
 }
 
-#project-title {
-    padding: 0;
+#project-detail .field {
+    margin: 0;
 }
 
 #project-tags {
-    padding: 8px;
     margin-bottom: 0;
 }
 
@@ -192,7 +196,7 @@ hr {
 .pin-form-images-item .x {
     position: absolute;
     top: 0px;
-    margin: 0px;
+    margin: 2px;
 }
 
 #sidebar-1 textarea,
