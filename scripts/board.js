@@ -28,15 +28,15 @@ navbarAddProjectIcon.addEventListener('click', (e) => {
 projectAll.addEventListener('click', (e) => {
     filter.project = '';
     filter.tag = '';
-    filterPins();
     projectDetail.style.display = 'none';
+    filterPins();
 }, false);
 
 projectInbox.addEventListener('click', (e) => {
     filter.project = '0';
     filter.tag = '';
-    filterPins();
     projectDetail.style.display = 'none';
+    filterPins();
 }, false);
 
 sidebar1OpenIcon.addEventListener(('click'), openSide);
@@ -56,6 +56,8 @@ updateProjectIcon.addEventListener('click', (e) => {
         if (response.message === 'success') {
             const id = projects.findIndex((p) => p.id == currentProject.id);
             projects[id] = project;
+            updateProjectInNavbar(project);
+            updateProjectInPinForm(project);
         }
     });
 }, false);

@@ -22,6 +22,7 @@ function populateProject() {
 
 function addProjectToNavbar(project) {
     const projectWidget = document.createElement('a');
+    projectWidget.id = project.id;
     projectWidget.innerHTML = project.name;
     projectWidget.addEventListener('click', (e) => {
         currentProject = projects.find((p) => p.id == project.id);
@@ -39,6 +40,16 @@ function addProjectToPinForm(project) {
     projectWidget.innerHTML = project.name;
     projectWidget.value = project.id;
     pinFormProject.appendChild(projectWidget);
+}
+
+function updateProjectInNavbar(project) {
+    const projectWidget = document.querySelector(`#navbar-projects [id='${project.id}'] `);
+    projectWidget.innerHTML = project.name;
+}
+
+function updateProjectInPinForm(project) {
+    const projectWidget = document.querySelector(`#pin-form-project option[value='${project.id}'] `);
+    projectWidget.innerHTML = project.name;
 }
 
 function getProjects() {
