@@ -15,6 +15,12 @@ body {
     transition: 0.5s;
 }
 
+hr {
+    background-color: #333;
+    height: 1px;
+    margin: 16px;
+}
+
 #navbar-open-icon {
     cursor: pointer;
 }
@@ -33,6 +39,81 @@ body {
     color: #333;
     display: block;
     transition: 0.3s;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+.flex-space {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#project-detail {
+    display: none;
+}
+
+#project-title {
+    padding: 0;
+}
+
+#project-tags {
+    padding: 8px;
+    margin-bottom: 0;
+}
+
+#project-description {
+    padding: 0;
+}
+
+.grid-item {
+    padding: 8px;
+    width: 25%;
+}
+
+.grid-item[data-cq~="max-width:700px"] {
+    width: 100%;
+}
+
+.grid-item[data-cq~="min-width:700px"] {
+    width: 50%;
+}
+
+.grid-item[data-cq~="min-width:1024px"] {
+    width: 33.33%;
+}
+
+.grid-item[data-cq~="min-width:1216px"] {
+    width: 25%;
+}
+
+.grid-item[data-cq~="min-width:1408px"] {
+    width: 20%;
+}
+
+.columns {
+    margin: 0;
+}
+
+.pin-edit-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.pin-delete-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 48px;
+}
+
+.pin .pin-tags {
+    margin-top: -1.25em;
 }
 
 #sidebar-1 {
@@ -133,77 +214,6 @@ body {
 #sidebar-2-min {
     display: none;
     cursor: pointer;
-}
-
-#main {
-    transition: margin-left .5s;
-    padding: 16px;
-}
-
-.flex-space {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#project-title {
-    padding: 0;
-}
-
-#project-tags {
-    padding: 8px;
-    margin-bottom: 0;
-}
-
-#project-description {
-    padding: 0;
-}
-
-.grid-item {
-    padding: 8px;
-    width: 25%;
-}
-
-.grid-item[data-cq~="max-width:700px"] {
-    width: 100%;
-}
-
-.grid-item[data-cq~="min-width:700px"] {
-    width: 50%;
-}
-
-.grid-item[data-cq~="min-width:1024px"] {
-    width: 33.33%;
-}
-
-.grid-item[data-cq~="min-width:1216px"] {
-    width: 25%;
-}
-
-.grid-item[data-cq~="min-width:1408px"] {
-    width: 20%;
-}
-
-.columns {
-    margin: 0;
-}
-
-.pin-edit-icon {
-    cursor: pointer;
-    position: absolute;
-    top: 16px;
-    right: 16px;
-}
-
-.pin-delete-icon {
-    cursor: pointer;
-    position: absolute;
-    top: 16px;
-    right: 48px;
-}
-
-.pin .pin-tags {
-    margin-top: -1.25em;
 }
 
 ::-webkit-scrollbar {

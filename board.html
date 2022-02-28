@@ -15,8 +15,10 @@
     <!-- Navbar -->
     <div id="navbar">
         <img class="image is-24x24" id="navbar-close-icon" src="./icons/close.svg" alt="Close Navbar">
+        <a id="project-all">All</a>
+        <a id="project-inbox">Inbox</a>
+        <hr>
         <div id="navbar-projects">
-            <a>Inbox</a>
         </div>
         <a>
             <div class="control flex-space">
@@ -34,18 +36,20 @@
             <img class="image is-24x24" id="sidebar-1-close-icon" src="./icons/move-right.svg" alt="Close Sidebar">
         </div>
         <div id="project">
-            <div class="field" style="flex: 1;">
-                <div class="control">
-                    <textarea class="textarea is-large" type="text" id="project-title" rows="1" placeholder="Project Title" aria-describedby="title"></textarea>
+            <div id="project-detail">
+                <div class="field" style="flex: 1;">
+                    <div class="control">
+                        <textarea class="textarea is-large" type="text" id="project-title" rows="1" placeholder="Project Title" aria-describedby="title"></textarea>
+                    </div>
                 </div>
-            </div>
-            <div id="project-tags" class="tags"></div>
-            <div class="field">
-                <div class="control">
-                    <textarea class="textarea" id="project-description" rows="1" placeholder="Description"></textarea>
+                <div id="project-tags" class="tags"></div>
+                <div class="field">
+                    <div class="control">
+                        <textarea class="textarea" id="project-description" rows="1" placeholder="Description"></textarea>
+                    </div>
                 </div>
+                <button id="update-project-icon" type="submit" class="button">Submit</button>
             </div>
-            <button id="update-project-icon" type="submit" class="button">Submit</button>
             <div id="project-board" class="columns">
             </div>
         </div>
@@ -86,7 +90,7 @@
                 <div class="control">
                     <div class="select">
                         <select id="pin-form-project" aria-label="Type">
-                            <option value="inbox">Inbox</option>
+                            <option value="0">Inbox</option>
                         </select>
                     </div>
                 </div>

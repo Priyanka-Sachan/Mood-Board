@@ -25,6 +25,20 @@ navbarAddProjectIcon.addEventListener('click', (e) => {
     }
 }, false);
 
+projectAll.addEventListener('click', (e) => {
+    filter.project = '';
+    filter.tag = '';
+    filterPins();
+    projectDetail.style.display = 'none';
+}, false);
+
+projectInbox.addEventListener('click', (e) => {
+    filter.project = '0';
+    filter.tag = '';
+    filterPins();
+    projectDetail.style.display = 'none';
+}, false);
+
 sidebar1OpenIcon.addEventListener(('click'), openSide);
 
 sidebar1CloseIcon.addEventListener(('click'), closeSide);

@@ -28,6 +28,7 @@ function addProjectToNavbar(project) {
         filter.project = currentProject.id;
         filter.tag = '';
         filterPins();
+        projectDetail.style.display = 'block';
         populateProject();
     }, false);
     navbarProjects.appendChild(projectWidget);

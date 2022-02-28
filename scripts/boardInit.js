@@ -11,10 +11,13 @@ const navbarOpenIcon = document.getElementById('navbar-open-icon');
 const navbarCloseIcon = document.getElementById('navbar-close-icon');
 const navbarAddProject = document.getElementById('navbar-add-project');
 const navbarAddProjectIcon = document.getElementById('navbar-add-project-icon');
+const projectAll = document.getElementById('project-all');
+const projectInbox = document.getElementById('project-inbox');
 const navbarProjects = document.getElementById('navbar-projects');
 
 // Main
 const main = document.getElementById('main');
+const projectDetail = document.getElementById('project-detail');
 const projectTitle = document.getElementById('project-title');
 const projectTags = document.getElementById('project-tags');
 const projectDescription = document.getElementById('project-description');

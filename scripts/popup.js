@@ -18,7 +18,7 @@ autosize(document.querySelectorAll('textarea'));
 function addProjectToPinForm(project) {
     const p = document.createElement('option');
     p.innerHTML = project.name;
-    p.value = project.name;
+    p.value = project.id;
     pinFormProject.appendChild(p);
 }
 
