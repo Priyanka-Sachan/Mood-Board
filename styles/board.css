@@ -57,6 +57,10 @@ hr {
     justify-content: space-between;
 }
 
+#project-board {
+    margin: auto;
+}
+
 #project-detail {
     display: none;
 }
@@ -76,26 +80,27 @@ hr {
 
 .grid-item {
     padding: 8px;
-    width: 25%;
+    width: 350px;
+    margin: auto;
 }
 
-.grid-item[data-cq~="max-width:700px"] {
+.grid-item[data-cq~="max-width:600px"] {
     width: 100%;
 }
 
-.grid-item[data-cq~="min-width:700px"] {
+.grid-item[data-cq~="min-width:600px"] {
     width: 50%;
 }
 
-.grid-item[data-cq~="min-width:1024px"] {
+.grid-item[data-cq~="min-width:850px"] {
     width: 33.33%;
 }
 
-.grid-item[data-cq~="min-width:1216px"] {
+.grid-item[data-cq~="min-width:1100px"] {
     width: 25%;
 }
 
-.grid-item[data-cq~="min-width:1408px"] {
+.grid-item[data-cq~="min-width:1350px"] {
     width: 20%;
 }
 
