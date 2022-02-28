@@ -70,7 +70,7 @@ pinForm.addEventListener('submit', function(event) {
             'id': Date.now(),
             'image': pinFormImage.getAttribute('src'),
             'favicon': pinFormFavicon.getAttribute('src'),
-            'images': Array.from(pinFormImages.childNodes, i => i.src),
+            'images': Array.from(pinFormImages.childNodes, i => i.children[0].src),
             'project': pinFormProject.value,
             'type': pinFormType.value,
             'title': pinFormTitle.value,

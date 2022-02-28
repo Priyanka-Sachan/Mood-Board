@@ -259,10 +259,15 @@ function populatePinForm() {
         pinFormFavicon.setAttribute('src', currentPin.favicon);
     const images = currentPin.images;
     images.forEach((i) => {
-        const img = document.createElement('img');
-        img.src = i;
-        img.classList.add('pin-form-images-item');
-        pinFormImages.appendChild(img);
+        const imagesItem = document.createElement('div');
+        imagesItem.classList.add('pin-form-images-item');
+        imagesItem.innerHTML = `<img src="${i}"><img class="x image is-16x16" src="./icons/x.svg">`;
+        pinFormImages.appendChild(imagesItem);
+        document.querySelectorAll('.pin-form-images-item .x').forEach((i) => {
+            i.addEventListener('click', (e) => {
+                i.parentElement.remove();
+            }, false);
+        });
     });
     if (currentPin.image)
         pinFormImage.setAttribute('src', currentPin.image);
