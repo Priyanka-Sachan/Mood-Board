@@ -29,6 +29,23 @@ sidebar1OpenIcon.addEventListener(('click'), openSide);
 
 sidebar1CloseIcon.addEventListener(('click'), closeSide);
 
+updateProjectIcon.addEventListener('click', (e) => {
+    const project = {
+        'id': currentProject.id,
+        'name': projectTitle.value,
+        'description': projectDescription.value
+    };
+    chrome.runtime.sendMessage({
+        message: 'update_project',
+        payload: project
+    }, response => {
+        if (response.message === 'success') {
+            const id = projects.findIndex((p) => p.id == currentProject.id);
+            projects[id] = project;
+        }
+    });
+}, false);
+
 pinForm.addEventListener('submit', function(event) {
     let isValid = pinForm.checkValidity();
     pinForm.classList.add('was-validated');

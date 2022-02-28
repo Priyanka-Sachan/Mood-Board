@@ -15,7 +15,10 @@ const navbarProjects = document.getElementById('navbar-projects');
 
 // Main
 const main = document.getElementById('main');
+const projectTitle = document.getElementById('project-title');
 const projectTags = document.getElementById('project-tags');
+const projectDescription = document.getElementById('project-description');
+const updateProjectIcon = document.getElementById('update-project-icon');
 const projectBoard = document.getElementById('project-board');
 const masonry = new Masonry(projectBoard, {
     columnWidth: '.grid-item',

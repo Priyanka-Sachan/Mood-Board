@@ -81,6 +81,27 @@ function updatePin(pin) {
     return true;
 }
 
+function updateProject(project) {
+    chrome.storage.local.get('projects', data => {
+        if (chrome.runtime.lastError) {
+            return false;
+        }
+        projects = data.projects;
+        const index = projects.findIndex((p) => p.id == project.id);
+        if (index !== -1)
+            projects[index] = project;
+        chrome.storage.local.set({
+            projects: projects
+        }, () => {
+            if (chrome.runtime.lastError) {
+                return false;
+            }
+            return true;
+        });
+    });
+    return true;
+}
+
 function deletePin(id) {
     chrome.storage.local.get('pins', data => {
         if (chrome.runtime.lastError) {
@@ -183,5 +204,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         });
         return true;
+    } else if (request.message === 'update_project') {
+        if (updateProject(request.payload)) {
+            sendResponse({ message: 'success' });
+        } else {
+            sendResponse({ message: 'fail' });
+        }
     }
 });

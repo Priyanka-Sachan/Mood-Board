@@ -91,7 +91,8 @@ body {
     border-radius: 8px;
 }
 
-#sidebar-1 textarea {
+#sidebar-1 textarea,
+#project textarea {
     border-style: none;
     border-color: transparent;
     /* overflow: auto; */
@@ -145,9 +146,17 @@ body {
     justify-content: space-between;
 }
 
+#project-title {
+    padding: 0;
+}
+
 #project-tags {
     padding: 8px;
     margin-bottom: 0;
+}
+
+#project-description {
+    padding: 0;
 }
 
 .grid-item {

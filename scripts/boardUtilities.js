@@ -12,23 +12,32 @@ function closeNav() {
     setTimeout(function() { masonry.layout(); }, 500);
 }
 
+function populateProject() {
+    console.log(currentProject);
+    projectTitle.value = currentProject.name;
+    projectDescription.value = currentProject.description;
+    autosize.update(document.querySelectorAll('textarea'));
+    updateProjectTags();
+}
+
 function addProjectToNavbar(project) {
-    const p = document.createElement('a');
-    p.innerHTML = project.name;
-    p.addEventListener('click', (e) => {
-        filter.project = project.name;
+    const projectWidget = document.createElement('a');
+    projectWidget.innerHTML = project.name;
+    projectWidget.addEventListener('click', (e) => {
+        currentProject = projects.find((p) => p.id == project.id);
+        filter.project = currentProject.id;
         filter.tag = '';
         filterPins();
-        updateProjectTags();
+        populateProject();
     }, false);
-    navbarProjects.appendChild(p);
+    navbarProjects.appendChild(projectWidget);
 }
 
 function addProjectToPinForm(project) {
-    const p = document.createElement('option');
-    p.innerHTML = project.name;
-    p.value = project.name;
-    pinFormProject.appendChild(p);
+    const projectWidget = document.createElement('option');
+    projectWidget.innerHTML = project.name;
+    projectWidget.value = project.id;
+    pinFormProject.appendChild(projectWidget);
 }
 
 function getProjects() {
@@ -86,7 +95,7 @@ function addPinToBoard(pin) {
     </div > `;
     projectBoard.appendChild(card);
     document.querySelector(`[id='${id}'] .pin-edit-icon`).addEventListener('click', event => {
-        currentPin = pin;
+        currentPin = pins.find((p) => p.id == id);
         if (currentPin) {
             mode = 1;
             populatePinForm();
