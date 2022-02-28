@@ -226,7 +226,7 @@ function populatePinForm() {
     images.forEach((i) => {
         const img = document.createElement('img');
         img.src = i;
-        img.classList.add('item');
+        img.classList.add('pin-form-images-item');
         pinFormImages.appendChild(img);
     });
     if (currentPin.image)

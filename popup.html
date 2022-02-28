@@ -10,23 +10,21 @@
 </head>
 
 <body>
-    <form id="add-pin-form">
-        <div id="wrapper">
-            <div id="carousel">
-                <div id="i-images">
-                </div>
+    <form id="pin-form">
+        <div id="pin-form-carousel">
+            <div id="pin-form-images">
             </div>
         </div>
         <figure class="image">
-            <img id="i-image">
+            <img id="pin-form-image">
         </figure>
         <div class="control">
-            <input class="input is-static" type="url" id="i-url" placeholder="Enter Url to be fetched..." required>
+            <input class="input is-static" type="url" id="pin-form-url" placeholder="Enter Url to be fetched..." required>
         </div>
         <div class="field">
             <div class="control">
                 <div class="select">
-                    <select id="i-project" aria-label="Type">
+                    <select id="pin-form-project" aria-label="Type">
                         <option value="inbox">Inbox</option>
                     </select>
                 </div>
@@ -34,23 +32,23 @@
         </div>
         <div class="flex-space">
             <figure class="image is-24x24">
-                <img id="i-favicon" src="./icons/web.svg">
+                <img id="pin-form-favicon" src="./icons/web.svg">
             </figure>
             <div class="field" style="flex: 1;">
                 <div class="control">
-                    <textarea class="textarea is-large" type="text" id="i-title" rows="1" placeholder="Title..." aria-describedby="title"></textarea>
+                    <textarea class="textarea is-large" type="text" id="pin-form-title" rows="1" placeholder="Title..." aria-describedby="title"></textarea>
                 </div>
             </div>
         </div>
         <div class="field">
             <div class="control">
-                <input class="input is-static" id="i-tags" type="text" data-type="tags" placeholder="Choose Tags">
+                <input class="input is-static" id="pin-form-tags" type="text" data-type="tags" placeholder="Choose Tags">
             </div>
         </div>
         <div class="field">
             <div class="control">
                 <div class="select">
-                    <select id="i-type" aria-label="Type">
+                    <select id="pin-form-type" aria-label="Type">
                         <option value="undefined">Undefined</option>
                         <option value="website">Website</option>
                         <option value="article">Article</option>
@@ -63,15 +61,15 @@
         </div>
         <div class="field">
             <div class="control">
-                <textarea class="textarea" id="i-description" rows="1" placeholder="Description"></textarea>
+                <textarea class="textarea" id="pin-form-description" rows="1" placeholder="Description"></textarea>
             </div>
         </div>
         <div class="field">
             <div class="control">
-                <textarea class="textarea" id="i-note" rows="1" placeholder="Your notes"></textarea>
+                <textarea class="textarea" id="pin-form-note" rows="1" placeholder="Your notes"></textarea>
             </div>
         </div>
-        <button id="add_pin" type="submit" class="button">Submit</button>
+        <button id="add-pin-icon" type="submit" class="button">Submit</button>
     </form>
     <a href="board.html" target="_blank" class="button">Open Board</a>
     <script src="packages/bulma-tagsinput.min.js"></script>

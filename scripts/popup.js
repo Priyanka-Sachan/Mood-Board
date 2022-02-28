@@ -1,78 +1,99 @@
-const form = document.getElementById('add-pin-form');
-const iFavicon = document.getElementById('i-favicon');
-const iImage = document.getElementById('i-image');
-const iImages = document.getElementById('i-images');
-const iProject = document.getElementById('i-project');
-const iTitle = document.getElementById('i-title');
-const iTags = document.getElementById('i-tags');
-new BulmaTagsInput(iTags);
-const iTagsInput = iTags.BulmaTagsInput();
-const iType = document.getElementById('i-type');
-const iUrl = document.getElementById('i-url');
-const iDescription = document.getElementById('i-description');
-const iNote = document.getElementById('i-note');
+let currentPin;
 
-let pinInfo;
+const pinForm = document.getElementById('pin-form');
+const pinFormFavicon = document.getElementById('pin-form-favicon');
+const pinFormImage = document.getElementById('pin-form-image');
+const pinFormImages = document.getElementById('pin-form-images');
+const pinFormProject = document.getElementById('pin-form-project');
+const pinFormTitle = document.getElementById('pin-form-title');
+const pinFormTags = document.getElementById('pin-form-tags');
+new BulmaTagsInput(pinFormTags);
+const pinFormTagsInput = pinFormTags.BulmaTagsInput();
+const pinFormType = document.getElementById('pin-form-type');
+const pinFormUrl = document.getElementById('pin-form-url');
+const pinFormDescription = document.getElementById('pin-form-description');
+const pinFormNote = document.getElementById('pin-form-note');
 autosize(document.querySelectorAll('textarea'));
+
+function addProjectToPinForm(project) {
+    const p = document.createElement('option');
+    p.innerHTML = project.name;
+    p.value = project.name;
+    pinFormProject.appendChild(p);
+}
+
+function getProjects() {
+    chrome.runtime.sendMessage({
+        message: 'get_projects'
+    }, response => {
+        if (response.message === 'success') {
+            projects = response.payload;
+            projects.forEach((project) => {
+                //Add project to pinForm
+                addProjectToPinForm(project);
+            });
+        }
+    });
+}
 
 function getImagePreview() {
     chrome.runtime.sendMessage({
         message: 'capture_preview'
     }, response => {
         if (response.message === 'success')
-            iImage.setAttribute('src', response.payload);
+            pinFormImage.setAttribute('src', response.payload);
         else
-            iImage.remove();
-        iImage.removeEventListener('error', getImagePreview);
+            pinFormImage.remove();
+        pinFormImage.removeEventListener('error', getImagePreview);
     });
 }
 
-function populatePinForm(pinInfo) {
-    if (pinInfo.favicon)
-        iFavicon.setAttribute('src', pinInfo.favicon);
-    const images = pinInfo.images;
+function populatePinForm(currentPin) {
+    if (currentPin.favicon)
+        pinFormFavicon.setAttribute('src', currentPin.favicon);
+    const images = currentPin.images;
     images.forEach((i) => {
         const img = document.createElement('img');
         img.src = i;
-        img.classList.add('item');
-        iImages.appendChild(img);
+        img.classList.add('pin-form-images-item');
+        pinFormImages.appendChild(img);
     });
-    iImage.addEventListener('error', getImagePreview);
-    if (pinInfo.image)
-        iImage.setAttribute('src', pinInfo.image);
+    pinFormImage.addEventListener('error', getImagePreview);
+    if (currentPin.image)
+        pinFormImage.setAttribute('src', currentPin.image);
     else if (images[0])
-        iImage.setAttribute('src', images[0]);
+        pinFormImage.setAttribute('src', images[0]);
     else
         getImagePreview();
-    if (pinInfo.title)
-        iTitle.value = pinInfo.title;
-    if (pinInfo.description)
-        iDescription.value = pinInfo.description;
-    if (pinInfo.type && [...iType.options].map(o => o.value).includes(pinInfo.type))
-        iType.value = pinInfo.type;
+    if (currentPin.title)
+        pinFormTitle.value = currentPin.title;
+    if (currentPin.description)
+        pinFormDescription.value = currentPin.description;
+    if (currentPin.type && [...pinFormType.options].map(o => o.value).includes(currentPin.type))
+        pinFormType.value = currentPin.type;
     else
-        iType.value = 'undefined';
+        pinFormType.value = 'undefined';
     autosize.update(document.querySelectorAll('textarea'));
 }
 
-form.addEventListener('submit', function(event) {
-    let isValid = form.checkValidity();
-    form.classList.add('was-validated');
+pinForm.addEventListener('submit', function(event) {
+    let isValid = pinForm.checkValidity();
+    pinForm.classList.add('was-validated');
     if (isValid === true) {
         const pin = {
             'id': Date.now(),
-            'image': iImage.getAttribute('src'),
-            'images': Array.from(iImages.children, i => i.src),
-            'project': iProject.value,
-            'favicon': iFavicon.getAttribute('src'),
-            'type': iType.value,
-            'title': iTitle.value,
-            'url': iUrl.value,
-            'domain': (new URL(iUrl.value)).hostname.replace('www.', ''),
-            'tags': iTagsInput.items,
-            'description': iDescription.value,
-            'note': iNote.value,
-            'article': pinInfo.article
+            'image': pinFormImage.getAttribute('src'),
+            'images': Array.from(pinFormImages.children, i => i.src),
+            'project': pinFormProject.value,
+            'favicon': pinFormFavicon.getAttribute('src'),
+            'type': pinFormType.value,
+            'title': pinFormTitle.value,
+            'url': pinFormUrl.value,
+            'domain': (new URL(pinFormUrl.value)).hostname.replace('www.', ''),
+            'tags': pinFormTagsInput.items,
+            'description': pinFormDescription.value,
+            'note': pinFormNote.value,
+            'article': currentPin.article
         };
         console.log('Pin created:', pin);
         chrome.runtime.sendMessage({
@@ -89,31 +110,12 @@ form.addEventListener('submit', function(event) {
     event.stopPropagation();
 }, false);
 
-function addProjectToPinForm(project) {
-    const p = document.createElement('option');
-    p.innerHTML = project.name;
-    p.value = project.name;
-    iProject.appendChild(p);
-}
-
-function getProjects() {
-    chrome.runtime.sendMessage({
-        message: 'get_projects'
-    }, response => {
-        if (response.message === 'success') {
-            projects = response.payload;
-            projects.forEach((project) => {
-                //Add project to form
-                addProjectToPinForm(project);
-            });
-        }
-    });
-}
 getProjects();
+
 chrome.windows.getCurrent({ populate: true }, window => {
     const site_to_pin = window.tabs.filter(tab => tab.active);
-    iUrl.value = site_to_pin[0].url;
-    iTitle.value = site_to_pin[0].title;
+    pinFormUrl.value = site_to_pin[0].url;
+    pinFormTitle.value = site_to_pin[0].title;
     chrome.runtime.sendMessage({
         message: 'get_current_document',
         payload: site_to_pin[0].id
@@ -122,7 +124,7 @@ chrome.windows.getCurrent({ populate: true }, window => {
             const data = '<!DOCTYPE html>' + response.payload[0].result;
             const result = parseDocument(data, site_to_pin[0].url);
             if (result.message == 'success') {
-                pinInfo = result.info;
+                currentPin = result.info;
                 populatePinForm(result.info);
             } else {
                 console.log('Failed..');

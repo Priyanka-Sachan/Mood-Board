@@ -1,33 +1,33 @@
 body {
     width: 850px;
     height: 700px;
+    margin: 16px;
     background-color: #ffffff;
 }
 
-body {
-    margin: 16px;
+.flex-space {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-#wrapper {
+#pin-form-carousel {
     width: 100%;
     position: relative;
     margin: 0;
     display: flex;
     justify-content: center;
     flex-direction: column;
-}
-
-#carousel {
     overflow: auto;
     scroll-behavior: smooth;
     scrollbar-width: none;
 }
 
-#carousel::-webkit-scrollbar {
+#pin-form-carousel::-webkit-scrollbar {
     height: 0;
 }
 
-#i-images {
+#pin-form-images {
     display: flex;
     grid-gap: 8px;
     grid-auto-flow: column;
@@ -35,7 +35,7 @@ body {
     box-sizing: border-box;
 }
 
-.item {
+.pin-form-images-item {
     height: 64px;
     width: 64px;
     background: transparent;
@@ -44,10 +44,8 @@ body {
     border-radius: 8px;
 }
 
-.flex-space {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.tags-input .input {
+    margin: 0;
 }
 
 .tags-input,
@@ -57,17 +55,13 @@ body {
     box-shadow: none;
 }
 
-#add-pin-form textarea {
+#pin-form textarea {
     border-style: none;
     border-color: transparent;
     /* overflow: auto; */
     box-shadow: none;
     padding-left: 0;
     padding-right: 0;
-}
-
-.tags-input .input {
-    margin: 0;
 }
 
 ::-webkit-scrollbar {
