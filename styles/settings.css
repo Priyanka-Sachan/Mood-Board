@@ -1,0 +1,20 @@
+#content-space {
+    padding: 32px;
+    width: 65%;
+    position: absolute;
+}
+
+#open-space {
+    width: 35%;
+    position: absolute;
+    background-color: #f5f5f5;
+    height: 100%;
+    right: 0;
+}
+
+#logo-image {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-left: -128px;
+}
