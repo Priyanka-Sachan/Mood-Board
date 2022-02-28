@@ -143,6 +143,30 @@ function updatePinInBoard(pin) {
     const pinWidget = document.querySelector(`#project-board [id='${pin.id}']`);
     const card = createPinCard(pin);
     pinWidget.replaceWith(card.children[0]);
+    document.querySelector(`[id='${pin.id}'] .pin-edit-icon`).addEventListener('click', event => {
+        currentPin = pins.find((p) => p.id == pin.id);
+        if (currentPin) {
+            mode = 1;
+            populatePinForm();
+            openSide();
+        } else {
+            //...Toast cannot open bookmark
+        }
+    }, false);
+    document.querySelector(`[id='${pin.id}'] .pin-delete-icon`).addEventListener('click', event => {
+        chrome.runtime.sendMessage({
+            message: 'delete_pin',
+            payload: pin.id
+        }, response => {
+            if (response.message === 'success') {
+                console.log('Pin deleted:', pin.id);
+                pins = pins.filter((p) => p.id != pin.id);
+                const pinWidget = document.querySelector(`#project-board [id='${pin.id}']`).parentElement;
+                pinWidget.remove();
+                masonry.layout();
+            }
+        });
+    }, false);
     masonry.layout();
 }
 
