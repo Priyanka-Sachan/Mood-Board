@@ -89,7 +89,7 @@ pinForm.addEventListener('submit', function(event) {
                 if (response.message === 'success') {
                     console.log('Pin saved:', pin);
                     pins.push(pin);
-                    filterPins();
+                    addPinToBoard(pin);
                 }
             });
         } else {
@@ -102,7 +102,7 @@ pinForm.addEventListener('submit', function(event) {
                     console.log('Pin updated:', pin);
                     const id = pins.findIndex((p) => p.id == currentPin.id);
                     pins[id] = pin;
-                    filterPins();
+                    updatePinInBoard(pin);
                 }
             });
         }
