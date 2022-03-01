@@ -53,10 +53,15 @@ function populatePinForm(currentPin) {
         pinFormFavicon.setAttribute('src', currentPin.favicon);
     const images = currentPin.images;
     images.forEach((i) => {
-        const img = document.createElement('img');
-        img.src = i;
-        img.classList.add('pin-form-images-item');
-        pinFormImages.appendChild(img);
+        const imagesItem = document.createElement('div');
+        imagesItem.classList.add('pin-form-images-item');
+        imagesItem.innerHTML = `<img src="${i}"><img class="x image is-16x16" src="./icons/x.svg">`;
+        pinFormImages.appendChild(imagesItem);
+        document.querySelectorAll('.pin-form-images-item .x').forEach((i) => {
+            i.addEventListener('click', (e) => {
+                i.parentElement.remove();
+            }, false);
+        });
     });
     pinFormImage.addEventListener('error', getImagePreview);
     if (currentPin.image)
@@ -83,7 +88,7 @@ pinForm.addEventListener('submit', function(event) {
         const pin = {
             'id': Date.now(),
             'image': pinFormImage.getAttribute('src'),
-            'images': Array.from(pinFormImages.children, i => i.src),
+            'images': Array.from(pinFormImages.children, i => i.children[0].src),
             'project': pinFormProject.value,
             'favicon': pinFormFavicon.getAttribute('src'),
             'type': pinFormType.value,

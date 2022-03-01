@@ -176,16 +176,11 @@ function updatePinInBoard(pin) {
 function updateProjectTags() {
     projectTags.innerHTML = '';
     let uniqueTags = [];
-    filteredPins = pins.filter((p) => {
-        if (filter.project) {
-            if (filter.tag) {
-                return (p.project == filter.project && p.tags.includes(filter.tag));
-            }
+    pins.filter((p) => {
+        if (filter.project)
             return p.project == filter.project;
-        }
         return true;
-    });
-    filteredPins.forEach((pin) => {
+    }).forEach((pin) => {
         pin.tags.forEach((tag) => {
             uniqueTags.push(tag);
         });

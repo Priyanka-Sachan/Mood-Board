@@ -78,6 +78,10 @@ hr {
     margin-bottom: 0;
 }
 
+#project-tags .tag {
+    cursor: pointer;
+}
+
 #project-description {
     padding: 0;
 }

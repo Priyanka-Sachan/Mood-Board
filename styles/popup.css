@@ -40,8 +40,21 @@ body {
     width: 64px;
     background: transparent;
     margin: 2px;
+    border-radius: 8px;
+}
+
+.pin-form-images-item img {
+    height: 64px;
+    width: 64px;
+    background: transparent;
     object-fit: cover;
     border-radius: 8px;
+}
+
+.pin-form-images-item .x {
+    position: absolute;
+    top: 0px;
+    margin: 2px;
 }
 
 .tags-input .input {
