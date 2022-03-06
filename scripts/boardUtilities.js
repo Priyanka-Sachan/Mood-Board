@@ -90,7 +90,9 @@ function createPinCard(pin) {
                 </div>`}
                 <div class='media-content'>
                 <p class='subtitle is-6 pin-domain'>${domain}</p>
-                <p class='title is-4 pin-title'>${title}</p>
+                <p class='title is-4 pin-title'>
+                    <a href='${url}' target='blank'>${title} </a>
+                </p>
                 <div class='tags pin-tags'>
                     ${tagsList}
                 </div>
@@ -98,12 +100,6 @@ function createPinCard(pin) {
         </div>
         <div class='content pin-description'>${description}</div>
         </div >
-        <figure class='image is-24x24 pin-edit-icon'>
-                <img src='./icons/edit.svg'>
-        </figure>
-        <figure class='image is-24x24 pin-delete-icon'>
-                <img src='./icons/delete.svg'>
-        </figure>
     </div > `;
     return card;
 }
@@ -111,30 +107,17 @@ function createPinCard(pin) {
 function addPinToBoard(pin) {
     const card = createPinCard(pin);
     projectBoard.appendChild(card);
-    document.querySelector(`[id='${pin.id}'] .pin-edit-icon`).addEventListener('click', event => {
-        currentPin = pins.find((p) => p.id == pin.id);
-        if (currentPin) {
-            mode = 1;
-            populatePinForm();
-            openSide();
-        } else {
-            //...Toast cannot open bookmark
-        }
-    }, false);
-    document.querySelector(`[id='${pin.id}'] .pin-delete-icon`).addEventListener('click', event => {
-        chrome.runtime.sendMessage({
-            message: 'delete_pin',
-            payload: pin.id
-        }, response => {
-            if (response.message === 'success') {
-                console.log('Pin deleted:', pin.id);
-                pins = pins.filter((p) => p.id != pin.id);
-                const pinWidget = document.querySelector(`#project-board [id='${pin.id}']`).parentElement;
-                pinWidget.remove();
-                updateProjectTags();
-                masonry.layout();
+    document.querySelector(`[id='${pin.id}']`).addEventListener('click', event => {
+        if (event.target.tagName.toLowerCase() != 'a') {
+            currentPin = pins.find((p) => p.id == pin.id);
+            if (currentPin) {
+                mode = 1;
+                populatePinForm();
+                openSide();
+            } else {
+                //...Toast cannot open bookmark
             }
-        });
+        }
     }, false);
     updateProjectTags();
     masonry.appended(card);

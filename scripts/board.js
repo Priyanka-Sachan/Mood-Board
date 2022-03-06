@@ -62,7 +62,8 @@ updateProjectIcon.addEventListener('click', (e) => {
     });
 }, false);
 
-pinForm.addEventListener('submit', function(event) {
+addPinIcon.addEventListener('click', function(event) {
+    console.log('here!!');
     let isValid = pinForm.checkValidity();
     pinForm.classList.add('was-validated');
     if (isValid === true) {
@@ -89,7 +90,9 @@ pinForm.addEventListener('submit', function(event) {
                 if (response.message === 'success') {
                     console.log('Pin saved:', pin);
                     pins.push(pin);
-                    addPinToBoard(pin);
+                    if (!filter.project || pin.project == filter.project)
+                        addPinToBoard(pin);
+                    mode = 1;
                 }
             });
         } else {
@@ -114,6 +117,26 @@ pinForm.addEventListener('submit', function(event) {
 pinFormUrlIcon.addEventListener('click', (e) => {
     fetchBookmark(pinFormUrl.value);
 });
+
+removePinIcon.addEventListener('click', (event) => {
+    chrome.runtime.sendMessage({
+        message: 'delete_pin',
+        payload: currentPin.id
+    }, response => {
+        if (response.message === 'success') {
+            console.log('Pin deleted:', currentPin.id);
+            pins = pins.filter((p) => p.id != currentPin.id);
+            const pinWidget = document.querySelector(`#project-board [id='${currentPin.id}']`).parentElement;
+            pinWidget.remove();
+            currentPin = null;
+            mode = 0;
+            updateProjectTags();
+            masonry.layout();
+        }
+    });
+    event.preventDefault();
+    event.stopPropagation();
+}, false);
 
 sidebar2Max.addEventListener(('click'), maxSide);
 

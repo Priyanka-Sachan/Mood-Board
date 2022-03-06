@@ -1,3 +1,12 @@
+@font-face {
+    font-family: "Lato";
+    src: url('./fonts/Lato-Regular.ttf') format('truetype');
+}
+
+* {
+    font-family: Lato, sans-serif !important;
+}
+
 body {
     width: 850px;
     height: 700px;
@@ -68,10 +77,11 @@ body {
     box-shadow: none;
 }
 
-#pin-form textarea {
+
+/* #pin-form textarea {
     border-style: none;
     border-color: transparent;
-    /* overflow: auto; */
+    overflow: auto;
     box-shadow: none;
     padding-left: 0;
     padding-right: 0;
@@ -88,4 +98,4 @@ body {
 
  ::-webkit-scrollbar-thumb {
     background: #F06060;
-}
+} */

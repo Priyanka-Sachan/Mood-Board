@@ -46,6 +46,8 @@ const pinFormType = document.getElementById('pin-form-type');
 const pinFormUrl = document.getElementById('pin-form-url');
 const pinFormDescription = document.getElementById('pin-form-description');
 const pinFormNote = document.getElementById('pin-form-note');
+const addPinIcon = document.getElementById('add-pin-icon');
+const removePinIcon = document.getElementById('remove-pin-icon');
 autosize(document.querySelectorAll('textarea'));
 
 // Sidebar 2
