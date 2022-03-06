@@ -268,3 +268,14 @@ hr {
  ::-webkit-scrollbar-thumb {
     background: #F06060;
 }
+
+::-moz-selection {
+    /* Code for Firefox */
+    color: white;
+    background: #7E8C4C;
+}
+
+ ::selection {
+    color: white;
+    background: #7E8C4C;
+}
