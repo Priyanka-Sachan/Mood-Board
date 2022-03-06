@@ -212,16 +212,6 @@ hr {
     margin: 2px;
 }
 
-#sidebar-1 textarea,
-#project textarea {
-    border-style: none;
-    border-color: transparent;
-    /* overflow: auto; */
-    box-shadow: none;
-    padding-left: 0;
-    padding-right: 0;
-}
-
 .tags-input,
 .is-focused.tags-input,
 .is-active.tags-input {
@@ -254,28 +244,4 @@ hr {
 #sidebar-2-min {
     display: none;
     cursor: pointer;
-}
-
-::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-}
-
- ::-webkit-scrollbar-track {
-    background: transparent;
-}
-
- ::-webkit-scrollbar-thumb {
-    background: #F06060;
-}
-
-::-moz-selection {
-    /* Code for Firefox */
-    color: white;
-    background: #7E8C4C;
-}
-
- ::selection {
-    color: white;
-    background: #7E8C4C;
 }
